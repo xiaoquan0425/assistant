@@ -16,7 +16,7 @@
 <script setup>
 import sidebar from './sidebar.vue'
 import Navbar from './Navbar.vue';
-import Navbar from './Navbar.vue';
+
 </script>
 <style lang="scss" scoped>
 .backend-layout {
