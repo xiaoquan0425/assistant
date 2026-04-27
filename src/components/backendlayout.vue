@@ -1,18 +1,15 @@
 <template>
   <div class="backend-layout">
     <el-container>
-      <el-header>
-        <Navbar/>
-      </el-header>
+      <Sidebar />
       <el-container>
-        <sidebar />
-        <el-main>
-          <router-view></router-view>
-        </el-main>
+        <el-header><Navbar/></el-header>
+        <el-main><router-view></router-view></el-main>
       </el-container>
     </el-container>
   </div>
 </template>
+
 <script setup>
 import sidebar from './Sidebar.vue'
 import Navbar from './Navbar.vue';
