@@ -4,12 +4,12 @@ const backendRoutes = [
     {
         path: '/back',
         component: backendlayout,
-        children: [
+        children: [{
 
-            //path: '/back/index',
-            //component: () => import('@/views/backendindex.vue')
+            path: 'dashboard',
+            component: () => import('@/views/dashboard.vue')
 
-        ]
+        }]
 
     }
 ]
