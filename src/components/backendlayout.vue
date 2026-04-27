@@ -1,7 +1,9 @@
 <template>
   <div class="backend-layout">
     <el-container>
-      <el-header>Header</el-header>
+      <el-header>
+        <navbar/>
+      </el-header>
       <el-container>
         <el-aside width="200px">Aside</el-aside>
         <el-main>Main</el-main>
@@ -11,6 +13,8 @@
 </template>
 <script setup>
 import sidebar from './sidebar.vue'
+import Navbar from './Navbar.vue';
+import Navbar from './Navbar.vue';
 </script>
 <style lang="scss" scoped>
 .backend-layout {
