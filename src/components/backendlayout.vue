@@ -5,7 +5,7 @@
         <Navbar/>
       </el-header>
       <el-container>
-        <el-aside width="200px">Aside</el-aside>
+        <sidebar />
         <el-main>
           <router-view></router-view>
         </el-main>
@@ -16,6 +16,7 @@
 <script setup>
 import sidebar from './Sidebar.vue'
 import Navbar from './Navbar.vue';
+import Sidebar from './Sidebar.vue';
 
 </script>
 <style lang="scss" scoped>
