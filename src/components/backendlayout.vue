@@ -9,6 +9,9 @@
     </el-container>
   </div>
 </template>
+<script setup>
+import sidebar from './sidebar.vue'
+</script>
 <style lang="scss" scoped>
 .backend-layout {
     height: 100vh;
