@@ -7,7 +7,7 @@
         @close="handleClose"
       >
       <div class="brand">
-        <el-image style="width: 50px; height: 50px;margin-left: 10px;":src="iconUrl" alt="logo" />
+        <el-image style="width: 50px; height: 50px;margin-right: 10px;":src="iconUrl" alt="logo" />
         <div class="info-card">
             <h1 class="brand-title">心理健康AI助手</h1>
             <p class="brand-subtitle">管理后台</p>
