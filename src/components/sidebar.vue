@@ -24,7 +24,7 @@
 <script setup>
 import { useRouter } from 'vue-router';
 const router = useRouter();
-const iconUrl = new URL('../assets/images/机器人.png', import.meta.url).href;
+const iconUrl = new URL('@/assets/images/机器人.png', import.meta.url).href;
 console.log(router, 'router');
 const handleOpen = () => {
     
