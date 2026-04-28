@@ -33,3 +33,13 @@ const handleClose = () => {
     
 }
 </script>
+<style lang="scss" scoped>
+.brand{
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: #fff;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+</style>
