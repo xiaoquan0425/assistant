@@ -4,7 +4,7 @@
         default-active="2"
         @open="handleOpen"
         @close="handleClose"
-        class ="menu-style"
+        class= "menu-style"
       >
       <div class="brand">
         <el-image style="width: 50px; height: 50px;margin-right: 10px;":src="iconUrl" alt="logo" />
@@ -34,7 +34,7 @@ const handleClose = () => {
 }
 </script>
 <style lang="scss" scoped>
-menu-style{
+.menu-style{
     height:100%;
     .brand{
     display: flex;
@@ -53,8 +53,8 @@ menu-style{
             font-size: 14px;
             color:#6b7280;
         }
+      }
     }
-}
 }
 
 </style>
