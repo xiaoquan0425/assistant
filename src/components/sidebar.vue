@@ -7,11 +7,8 @@
         @close="handleClose"
       >
       <div class="brand">
-<<<<<<< HEAD
-        <el-image :src="iconUrl" alt="logo" />
-=======
-        <el-image style="width: 50px; height: 50px"src="iconUrl" alt="logo" />
->>>>>>> SideBar
+
+        <el-image style="width: 50px; height: 50px;"src="iconUrl" alt="logo" />
         <div class="info-card">
             <h1 class="brand-title">心理健康AI助手</h1>
             <p class="sub-title">管理后台</p>
