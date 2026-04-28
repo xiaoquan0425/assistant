@@ -7,11 +7,15 @@
         @close="handleClose"
       >
       <div class="brand">
+<<<<<<< HEAD
 
         <el-image style="width: 50px; height: 50px;":src="iconUrl" alt="logo" />
+=======
+        <el-image style="width: 50px; height: 50px;margin-left: 10px;":src="iconUrl" alt="logo" />
+>>>>>>> SideBar
         <div class="info-card">
             <h1 class="brand-title">心理健康AI助手</h1>
-            <p class="sub-title">管理后台</p>
+            <p class="brand-subtitle">管理后台</p>
         </div>
        </div> 
         <el-menu-item v-for="item in router.options.routes[0].children" :key="item.path" :index="item.path">
@@ -41,6 +45,22 @@ const handleClose = () => {
     padding: 10px;
     background-color: #fff;
     border-bottom: 1px solid #e5e7eb;
+    .info-card{
+        .brand-title{
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #1f2937;
+        }
+        .brand-subtitle{
+            font-size: 14px;
+            color:#6b7280;
+        }
+    }
+}
+.el-menu-vertical-demo{
+    height: 100vh;
+    border-right: none;
 }
 
 </style>
