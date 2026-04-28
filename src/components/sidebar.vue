@@ -7,16 +7,16 @@
         @close="handleClose"
       >
       <div class="brand">
-        <el-image src="../assets/logo.png" alt="logo" />
-        </div class="info-card">
-        <h1 class="brand-title">心理健康AI助手</h1>
-        <p class="sub-title">管理后台</p>
+        <el-image src="iconUrl" alt="logo" />
+        <div class="info-card">
+            <h1 class="brand-title">心理健康AI助手</h1>
+            <p class="sub-title">管理后台</p>
+        </div>
        </div> 
         <el-menu-item v-for='item in router.options.routes[0].children' :key="item.path" :index="item.path">
           <el-icon><component :is="item.meta.icon"/></el-icon>
           <span>{{ item.meta.title }}</span>
         </el-menu-item>
-    
       </el-menu>
     </el-aside>
     
@@ -24,6 +24,7 @@
 <script setup>
 import { useRouter } from 'vue-router';
 const router = useRouter();
+const iconUrl = new URL('../assets/images/机器人.png', import.meta.url).href;
 console.log(router, 'router');
 const handleOpen = () => {
     
