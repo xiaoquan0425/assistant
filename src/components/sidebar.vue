@@ -2,9 +2,9 @@
     <el-aside width="264px">
         <el-menu
         default-active="2"
-        class="el-menu-vertical-demo"
         @open="handleOpen"
         @close="handleClose"
+        class ="menu-style"
       >
       <div class="brand">
         <el-image style="width: 50px; height: 50px;margin-right: 10px;":src="iconUrl" alt="logo" />
@@ -34,7 +34,9 @@ const handleClose = () => {
 }
 </script>
 <style lang="scss" scoped>
-.brand{
+menu-style{
+    height:100%;
+    .brand{
     display: flex;
     align-items: center;
     padding: 10px;
@@ -53,9 +55,6 @@ const handleClose = () => {
         }
     }
 }
-.el-menu-vertical-demo{
-    height: 100vh;
-    border-right: none;
 }
 
 </style>
