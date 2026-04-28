@@ -7,7 +7,11 @@
         @close="handleClose"
       >
       <div class="brand">
+<<<<<<< HEAD
         <el-image :src="iconUrl" alt="logo" />
+=======
+        <el-image style="width: 50px; height: 50px"src="iconUrl" alt="logo" />
+>>>>>>> SideBar
         <div class="info-card">
             <h1 class="brand-title">心理健康AI助手</h1>
             <p class="sub-title">管理后台</p>
@@ -33,3 +37,13 @@ const handleClose = () => {
     
 }
 </script>
+<style lang="scss" scoped>
+.brand{
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: #fff;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+</style>
