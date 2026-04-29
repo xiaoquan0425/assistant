@@ -21,7 +21,7 @@ import { Expand } from '@element-plus/icons-vue'
     align-items: center;
     padding:0 15px;
     background-color: #fff;
-    box-shadow:0 1px 4px rgb(0, 21, 41);
+    box-shadow:0 1px 4px rgb(0, 21, 41,0.08);
     border-bottom: 1px solid #e5e7eb;
     .flex-box {
     display: flex;
