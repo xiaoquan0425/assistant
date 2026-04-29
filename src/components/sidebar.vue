@@ -2,18 +2,18 @@
     <el-aside width="264px">
         <el-menu
         default-active="2"
-        class="el-menu-vertical-demo"
         @open="handleOpen"
         @close="handleClose"
+        class= "menu-style"
       >
       <div class="brand">
-        <el-image style="width: 50px; height: 50px;margin-left: 10px;":src="iconUrl" alt="logo" />
+        <el-image style="width: 50px; height: 50px;margin-right: 10px;":src="iconUrl" alt="logo" />
         <div class="info-card">
             <h1 class="brand-title">心理健康AI助手</h1>
             <p class="brand-subtitle">管理后台</p>
         </div>
        </div> 
-        <el-menu-item v-for='item in router.options.routes[0].children' :key="item.path" :index="item.path">
+        <el-menu-item v-for="item in router.options.routes[0].children" :key="item.path" :index="item.path">
           <el-icon><component :is="item.meta.icon"/></el-icon>
           <span>{{ item.meta.title }}</span>
         </el-menu-item>
@@ -24,7 +24,7 @@
 <script setup>
 import { useRouter } from 'vue-router';
 const router = useRouter();
-const iconUrl = new URL('../assets/images/机器人.png', import.meta.url).href;
+const iconUrl = new URL('@/assets/robot.png', import.meta.url).href;
 console.log(router, 'router');
 const handleOpen = () => {
     
@@ -34,7 +34,9 @@ const handleClose = () => {
 }
 </script>
 <style lang="scss" scoped>
-.brand{
+.menu-style{
+    height:100%;
+    .brand{
     display: flex;
     align-items: center;
     padding: 10px;
@@ -51,11 +53,8 @@ const handleClose = () => {
             font-size: 14px;
             color:#6b7280;
         }
+      }
     }
-}
-.el-menu-vertical-demo{
-    height: 100vh;
-    border-right: none;
 }
 
 </style>

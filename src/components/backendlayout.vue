@@ -1,23 +1,26 @@
 <template>
   <div class="backend-layout">
-    <el-container>
-      <el-header>
-        <navbar/>
-      </el-header>
+    <el-container class="main-container">
+      <Sidebar />
       <el-container>
-        <el-aside width="200px">Aside</el-aside>
-        <el-main>Main</el-main>
+        <el-header><Navbar/></el-header>
+        <el-main><router-view></router-view></el-main>
       </el-container>
     </el-container>
   </div>
 </template>
+
 <script setup>
-import sidebar from './sidebar.vue'
+import sidebar from './Sidebar.vue'
 import Navbar from './Navbar.vue';
-import Navbar from './Navbar.vue';
+import Sidebar from './Sidebar.vue';
+
 </script>
 <style lang="scss" scoped>
 .backend-layout {
     height: 100vh;
+    .main-container {
+        height: 100%;
+    }
 }
 </style>
