@@ -5,9 +5,9 @@ import { Expand } from '@element-plus/icons-vue'
 <template>
         <div class="navbar">
             <div class="flex-box">
-                <el-botton>
+                <el-button>
                     <el-icon><Expand /></el-icon>
-                </el-botton>
+                </el-button>
                 <p class="page-title">导航栏</p>
             </div>
             <div class="flex-box"></div>
