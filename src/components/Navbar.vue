@@ -1,12 +1,8 @@
-<script setup>
-import { Expand } from '@element-plus/icons-vue'
-</script>
-
 <template>
         <div class="navbar">
             <div class="flex-box">
                 <el-button>
-                    <el-icon><Expand /></el-icon>
+                    <el-icon><Expand/></el-icon>
                 </el-button>
                 <p class="page-title">导航栏</p>
             </div>
@@ -15,7 +11,7 @@ import { Expand } from '@element-plus/icons-vue'
                 <div class="flex-box">
                     <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"/>
                     <p class="user-name">admin</p>
-                    <el-icon>ArrowDown</el-icon>
+                    <el-icon><ArrowDown /></el-icon>
                 </div>
                 <template #dropdown>
                     <el-dropdown-menu>
@@ -27,11 +23,10 @@ import { Expand } from '@element-plus/icons-vue'
         </div>
 </template>
 <script setup>
-import { el } from 'element-plus/es/locale/index.mjs';
-
 const handleCommand = (command) => {
     if (command === 'logout') {
 
+}
 }
 </script>
 <style lang="scss" scoped>
