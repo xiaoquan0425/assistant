@@ -6,6 +6,14 @@
     </div>
   </div>
 </template>
+<script setup>
+defineProps({
+    title: {
+        type: String,
+        default: '页面标题'
+    }
+})
+</script>
 <style lang="scss"scoped>
 .page-head {
     display: flex;
