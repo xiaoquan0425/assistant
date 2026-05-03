@@ -1,7 +1,3 @@
-<script setup>
-import { Expand } from '@element-plus/icons-vue'
-</script>
-
 <template>
         <div class="navbar">
             <div class="flex-box">
@@ -15,7 +11,7 @@ import { Expand } from '@element-plus/icons-vue'
                 <div class="flex-box">
                     <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"/>
                     <p class="user-name">admin</p>
-                    <el-icon>ArrowDown</el-icon>
+                    <el-icon><ArrowDown /></el-icon>
                 </div>
                 <template #dropdown>
                     <el-dropdown-menu>
@@ -34,12 +30,12 @@ const handleCommand = (command) => {
 
 }
 const handleCollaspe = () => {
-    
+    useAdminStore().toggleSidebar()//先调用拿到一个实例，在调用实例中的方法，这样就能进行状态的修改
 }
 </script>
 <style lang="scss" scoped>
 .navbar {
-    height: 64px;
+    height: 100%;//继承父类高度
     display: flex;
     justify-content: space-between;
     align-items: center;
