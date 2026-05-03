@@ -29,7 +29,7 @@ import Sidebar from './Sidebar.vue';
         .content-container {
             padding: 20px;
             background-color: #fff;
-            min-height: calc(100%-74px);
+            min-height: calc(100% - 74px);
         }
     }
 }

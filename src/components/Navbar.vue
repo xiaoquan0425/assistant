@@ -31,7 +31,7 @@ const handleCommand = (command) => {
 </script>
 <style lang="scss" scoped>
 .navbar {
-    height: 64px;
+    height: 100%;//继承父类高度
     display: flex;
     justify-content: space-between;
     align-items: center;
