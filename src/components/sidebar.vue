@@ -20,10 +20,13 @@
     
 </template>
 <script setup>
+import { computed } from 'vue';
 import { useRouter } from 'vue-router';
+import { useAdminStore } from '@/stores/admin';
 const router = useRouter();
 const iconUrl = new URL('@/assets/robot.png', import.meta.url).href;
 
+const isCollapse = computed(() => useAdminStore().isCollapse)
 const selectMenu = (key) => {
     const currentRoute=router.options.routes[0]
     router.push(`${currentRoute.path}/${key.index}`)
