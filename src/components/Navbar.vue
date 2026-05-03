@@ -5,7 +5,7 @@ import { Expand } from '@element-plus/icons-vue'
 <template>
         <div class="navbar">
             <div class="flex-box">
-                <el-button>
+                <el-button @click="handleCollaspe">
                     <el-icon><Expand /></el-icon>
                 </el-button>
                 <p class="page-title">导航栏</p>
@@ -28,10 +28,13 @@ import { Expand } from '@element-plus/icons-vue'
 </template>
 <script setup>
 import { el } from 'element-plus/es/locale/index.mjs';
-
+import { useAdminStore } from "@/stores/admin";
 const handleCommand = (command) => {
     if (command === 'logout') {
 
+}
+const handleCollaspe = () => {
+    
 }
 </script>
 <style lang="scss" scoped>
