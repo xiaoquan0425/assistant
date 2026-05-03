@@ -29,7 +29,7 @@ const handleCommand = (command) => {
     if (command === 'logout') {
 
 }
-const handleCollaspe = () => {
+const handleCollapse = () => {
     useAdminStore().toggleSidebar()//先调用拿到一个实例，在调用实例中的方法，这样就能进行状态的修改
 }
 </script>

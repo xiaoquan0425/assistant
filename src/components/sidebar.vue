@@ -1,6 +1,7 @@
 <template>
     <el-aside width="264px">
         <el-menu
+        :collapse="isCollapse"
         default-active="2"
         class= "menu-style"
       >
