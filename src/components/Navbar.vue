@@ -1,7 +1,7 @@
 <template>
         <div class="navbar">
             <div class="flex-box">
-                <el-button @click="handleCollaspe">
+                <el-button @click="handleCollapse">
                     <el-icon><Expand /></el-icon>
                 </el-button>
                 <p class="page-title">导航栏</p>
