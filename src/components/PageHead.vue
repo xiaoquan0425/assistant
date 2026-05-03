@@ -1,13 +1,13 @@
 <template>
   <div class="page-head">
-    <p class="page-title">页面标题</p>
+    <p class="page-title">{{ props.title }}</p>
     <div class="action-btns">
         <slot name="buttons"></slot>
     </div>
   </div>
 </template>
 <script setup>
-defineProps({
+const props = defineProps({
     title: {
         type: String,
         default: '页面标题'
