@@ -24,13 +24,16 @@
 </template>
 <script setup>
 import { el } from 'element-plus/es/locale/index.mjs';
+import { Expand,ArrowDown } from '@element-plus/icons-vue'
+import { ref } from 'vue';
 import { useAdminStore } from "@/stores/admin";
 const handleCommand = (command) => {
     if (command === 'logout') {
 
 }
+}
 const handleCollapse = () => {
-    useAdminStore().toggleSidebar()//先调用拿到一个实例，在调用实例中的方法，这样就能进行状态的修改
+    useAdminStore().toggleCollapse()//先调用拿到一个实例，在调用实例中的方法，这样就能进行状态的修改
 }
 </script>
 <style lang="scss" scoped>
