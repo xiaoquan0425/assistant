@@ -9,10 +9,11 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="right-section">    
+         <div class="right-section">    
         <router-view></router-view>
     </div>
+    </div>
+   
 
 </template>
 <script setup>
