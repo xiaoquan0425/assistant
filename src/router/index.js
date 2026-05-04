@@ -40,6 +40,9 @@ const backendRoutes = [
 
         ]
 
+    }, {
+        path: '/auth',
+        component: () => import('@/views/login.vue')
     }
 ]
 const router = createRouter({
