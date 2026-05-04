@@ -18,7 +18,10 @@ const formItem = [
     ]
     }
 ]
-
+const handleSearch = (formData) => {
+    console.log(formData,'查询参数')
+    
+}
 </script>
 
 <template>
