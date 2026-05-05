@@ -19,8 +19,22 @@ const formItem = [
     }
 ]}
 ]
-const handleSearch = (formData) => {
+//分页参数
+const pagination = reactive({
+    currentPage:1,
+    size:10,
+    total:0
+})
+//搜索参数
+const handleSearch = async(formData) => {//获取列表数据
     console.log(formData,'查询参数')
+    const params = {
+        ...pagination,
+        ...formData
+    }
+
+    const {records,total} = await articlePage(params)
+    tableData.value = records
     
 }
 //分类映射,将分类id映射为分类名称,所以定义成对象
@@ -28,6 +42,9 @@ const categoryMap =reactive({})
 
 // 分类列表
 const categories = ref([])
+
+//列表数据
+const tableData = ref([])//在调接口的时候要把data赋值
 
 onMounted(async() => {
     const data = await categoryTree()
@@ -39,6 +56,8 @@ onMounted(async() => {
         }
     })
     formItem[1].options = categories.value//将分类列表赋值给formItem
+    //获取列表数据
+    handleSearch()
 })
 
 </script>
@@ -54,5 +73,21 @@ onMounted(async() => {
         </PageHead>
         <Tablesearch :formItem="formItem" @search="search" />
         <!--回调函数在组件内部调用然后拿到form表单的结果 -->
+        <el-table :data = "tableData" style="width: 100%;margin-top: 25px;">
+            <el-table-column  label="文章标题" width="200" >
+                <template #default="scope.row">
+                    <!-- 获取当前行数据 -->
+                    <div style="display: flex; align-items: center"></div>
+                    <el-icon><timer /></el-icon>
+                    <span style="margin-left: 10px">{{ scope.row.title }}</span>
+                </template>
+            </el-table-column>
+            <el-table-column prop="author" label="作者" width="180"/>
+            <el-table-column prop="createTime" label="创建时间" width="180" :formatter="formatterDate"/>
+            </el-table-column>
+            <el-table-column prop="categoryId" label="分类" width="180" :formatter="formatterCategory"/>
+            <el-table-column prop="status" label="状态" width="180" :formatter="formatterStatus"/>
+
+        </el-table>
     </div>
 </template>
