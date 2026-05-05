@@ -86,12 +86,12 @@ const submitForm = (formEl) => {
         .btn{
             margin-top:30px;
             width: 100%;
-        }
+        }}
         .footer{
             padding:30px;
             text-align: center;
         }
-    }
+
     }
     
 </style>
