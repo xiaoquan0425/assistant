@@ -75,19 +75,13 @@ onMounted(async() => {
         <!--回调函数在组件内部调用然后拿到form表单的结果 -->
         <el-table :data = "tableData" style="width: 100%;margin-top: 25px;">
             <el-table-column  label="文章标题" width="200" >
-                <template #default="scope.row">
+                <template #default="scope">
                     <!-- 获取当前行数据 -->
                     <div style="display: flex; align-items: center"></div>
                     <el-icon><timer /></el-icon>
                     <span style="margin-left: 10px">{{ scope.row.title }}</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="author" label="作者" width="180"/>
-            <el-table-column prop="createTime" label="创建时间" width="180" :formatter="formatterDate"/>
-            </el-table-column>
-            <el-table-column prop="categoryId" label="分类" width="180" :formatter="formatterCategory"/>
-            <el-table-column prop="status" label="状态" width="180" :formatter="formatterStatus"/>
-
         </el-table>
     </div>
 </template>
