@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted,ref,reactive } from 'vue';
+import {onMounted, ref, reactive } from 'vue';
 import PageHead from '@/components/PageHead.vue';
 import Tablesearch from '@/components/Tablesearch.vue';
 import { categoryTree } from '@/api/admin';
@@ -29,18 +29,18 @@ const categoryMap =reactive({})
 // 分类列表
 const categories = ref([])
 
-onMounted(async() => {//同步函数
+onMounted(async() => {
     const data = await categoryTree()
-
     categories.value = data.map(item => {
         categoryMap[item.id] = item.categoryName
         return {
-            label:item.categoryName,
-            value:item.id
+            label: item.categoryName,
+            value: item.id
         }
     })
-    formItem[1].options = catagories.value//将分类列表赋值给formItem
+    formItem[1].options = categories.value//将分类列表赋值给formItem
 })
+
 </script>
 
 
