@@ -1,27 +1,44 @@
 <script setup>
-import {onMounted,ref } from 'vue';
+import {onMounted,ref,reactive } from 'vue';
 import PageHead from '@/components/PageHead.vue';
 import Tablesearch from '@/components/Tablesearch.vue';
 import { catagoryTree } from '@/api/admin.js';
 
 const formItem = [
     {comp:'input',prop:'title',label:'文章标题',placeholder:'请输入文章标题'},
-    {comp:'select',prop:'catagoryId',label:'分类',placeholder:'请选择分类'
+    {comp:'select',prop:'catagoryId',label:'分类',placeholder:'请选择分类'},
+    {comp:'select',prop:'status',label:'状态',placeholder:'请选择状态',options:[{
+        label:'草稿',
+        value:0
+    },{
+        label:'已发布',
+        value:1
+    },{
+        label:'已下线',
+        value:2
     }
+]}
 ]
 const handleSearch = (formData) => {
     console.log(formData,'查询参数')
     
 }
+//分类映射
+const catagoryMap =reactive({})
+// 分类列表
+const catagories = ref([])
+
 onMounted(async() => {//同步函数
-    const data = await catagoryTree();
-    data.map(item => {
+    const {data} = await catagoryTree()
+
+    catagories.value = data.map(item => {
+        catagoryMap[item.id] = item.categoryName
         return {
-            label:item.catagoryName,
+            label:item.categoryName,
             value:item.id
         }
-        }   
-    )
+    })
+    formItem[1].options = catagories.value//将分类列表赋值给formItem
 })
 </script>
 
