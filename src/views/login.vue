@@ -23,7 +23,7 @@ const submitForm = (formEl) => {
     if (!formEl) return
     formEl.validate((valid,fields) => {
         if (valid) {
-            login(formData).then(res=>{
+            login(formData).then(data=>{
                 //判断token是否存在
                 if(!data.token){
                     return console.error('登录失败')
