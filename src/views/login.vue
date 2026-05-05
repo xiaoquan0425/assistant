@@ -2,6 +2,7 @@
 import { Back } from '@element-plus/icons-vue';
 import { ref,reactive} from 'vue';
 import { login } from '@/api/admin';
+import { useRouter } from 'vue-router'; 
 const formData = reactive({
     username: '',
     password: ''
@@ -17,6 +18,7 @@ const rules=reactive({
 })
 const ruleFormRef = ref()
 //登录
+const router = useRouter()
 const submitForm = (formEl) => {
     if (!formEl) return
     formEl.validate((valid,fields) => {
@@ -31,6 +33,8 @@ const submitForm = (formEl) => {
                 localStorage.setItem('userInfo',JSON.stringify(data.userInfo))//用户信息是对象转换成字符串再保存
                 //根据用户角色决定跳转的路径
                 if(data.userInfo.userType === 2){
+                    router.push('/back/dashboard')
+                }else{
                     
                 }
             })
