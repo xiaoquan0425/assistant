@@ -50,8 +50,7 @@ const submitForm = (formEl) => {
                 <el-input v-model="formData.username" size="large" placeholder="请输入用户名或邮箱" />
             </el-form-item>
             <el-form-item label="密码" prop="password">
-                <el-input v-model="formData.password" size="large" placeholder="请输入密码" type="password" show-password />
-                
+                <el-input v-model="formData.password" size="large" placeholder="请输入密码" type="password" show-password /> 
             </el-form-item>
             </el-form>
                 <el-button class="btn" type="primary" size="large" @click="submitForm(ruleFormRef)">登录</el-button>
@@ -82,11 +81,10 @@ const submitForm = (formEl) => {
             }
         }
         }
-    }
-    .form-container {
+        .form-container {
         margin-top: 40px;
         .btn{
-            margin-top: 40px;
+            margin-top:30px;
             width: 100%;
         }
         .footer{
@@ -94,4 +92,6 @@ const submitForm = (formEl) => {
             text-align: center;
         }
     }
+    }
+    
 </style>
