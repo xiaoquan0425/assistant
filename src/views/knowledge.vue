@@ -13,7 +13,18 @@ const handleSearch = (formData) => {
     console.log(formData,'查询参数')
     
 }
+onMounted(async() => {//同步函数
+    const data = await catagoryTree();
+    data.map(item => {
+        return {
+            label:item.catagoryName,
+            value:item.id
+        }
+        }   
+    )
+})
 </script>
+
 
 <template>
     <div>
