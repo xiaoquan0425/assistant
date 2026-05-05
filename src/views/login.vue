@@ -29,8 +29,10 @@ const submitForm = (formEl) => {
                 //登陆成功,保存token和用户信息
                 localStorage.setItem('token',data.token)
                 localStorage.setItem('userInfo',JSON.stringify(data.userInfo))//用户信息是对象转换成字符串再保存
-                //跳转到首页
-                router.push('/')
+                //根据用户角色决定跳转的路径
+                if(data.userInfo.userType === 2){
+                    
+                }
             })
         }
     })
