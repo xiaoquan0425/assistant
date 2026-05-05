@@ -1,21 +1,12 @@
 <script setup>
+import {onMounted,ref } from 'vue';
 import PageHead from '@/components/PageHead.vue';
 import Tablesearch from '@/components/Tablesearch.vue';
+import { catagoryTree } from '@/api/admin.js';
+
 const formItem = [
     {comp:'input',prop:'title',label:'文章标题',placeholder:'请输入文章标题'},
-    {comp:'select',prop:'catagoryId',label:'分类',placeholder:'请选择分类',options:[{
-        label:'心理健康基础',
-        value:'1'
-    },{
-        label:'心理测试',
-        value:'2'
-    },{
-        label:'心理科普',
-        value:'3'
-    },{
-        label:'心理干预',
-        value:'4'}
-    ]
+    {comp:'select',prop:'catagoryId',label:'分类',placeholder:'请选择分类'
     }
 ]
 const handleSearch = (formData) => {
