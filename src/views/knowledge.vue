@@ -2,7 +2,7 @@
 import {onMounted, ref, reactive } from 'vue';
 import PageHead from '@/components/PageHead.vue';
 import Tablesearch from '@/components/Tablesearch.vue';
-import { categoryTree } from '@/api/admin';
+import { categoryTree,articlePage} from '@/api/admin';
 
 const formItem = [
     {comp:'input',prop:'title',label:'文章标题',placeholder:'请输入文章标题'},
