@@ -1,5 +1,20 @@
 <script setup lang="ts">
 import { Back } from '@element-plus/icons-vue';
+import { ref,reactive} from 'vue';
+const formData = reactive({
+    username: '',
+    password: ''
+    //接口文档里的请求参数
+})
+const rules=reactive({
+    username: [
+        { required: true, message: '请输入用户名', trigger: 'blur' }//是否必填，blur代表失去焦点
+    ],
+    password:[
+        { required: true, message: '请输入密码', trigger: 'blur' }
+    ]
+})
+import { formItemValidateStates } from 'element-plus';
 
 </script>
 
@@ -18,8 +33,17 @@ import { Back } from '@element-plus/icons-vue';
         <div class="form-container">
             <el-form
             ref="ruleFormRef"
+            :model="formData"
+            :rules="rules"
+            label-position="top"
             >
-
+            <el-form-item label="用户名或邮箱" prop="username">
+                <el-input v-model="formData.username" size="large" placeholder="请输入用户名或邮箱" />
+            </el-form-item>
+            <el-form-item label="密码" prop="password">
+                <el-input v-model="formData.password" size="large" placeholder="请输入密码" type="password" show-password />
+                
+            </el-form-item>
             </el-form>
         </div>
     </div>
