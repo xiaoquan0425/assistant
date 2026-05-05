@@ -35,6 +35,9 @@ service.interceptors.response.use(response => {
                 localStorage.removeItem('userInfo')
                 //跳转到登录页面
                 window.location.href = '/auth/login'
+            } else {
+                ElMessage.error(data.msg || '登录过期，请重新登录')
+                return Promise.reject('网络请求失败...')
             }
         }
     }
@@ -44,3 +47,5 @@ service.interceptors.response.use(response => {
     return Promise.reject(error)
 
 })
+// Service对外暴露
+export default service
