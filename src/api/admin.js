@@ -6,3 +6,7 @@ export function login(data) {
 export function categoryTree() {//根据文档里他没有参数只需要传一个token所以这里就不填参数了
     return service.get('/knowledge/category/tree')
 }
+export function articlePage(params) {//由于使用的是axios,传入一个对象，里面的key必须是params
+    return service.get('/knowledge/article/page', { params })
+
+}
