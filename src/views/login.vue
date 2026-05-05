@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup >
 import { Back } from '@element-plus/icons-vue';
 import { ref,reactive} from 'vue';
 const formData = reactive({
@@ -14,7 +14,16 @@ const rules=reactive({
         { required: true, message: '请输入密码', trigger: 'blur' }
     ]
 })
-import { formItemValidateStates } from 'element-plus';
+const ruleFormRef = ref()
+//登录
+const submitForm = (formEl) => {
+    if (!formEl) return
+    formEl.validate((valid,fields) => {
+        if (valid) {
+            console.log(fields)
+        }
+    })
+}
 
 </script>
 
@@ -45,8 +54,15 @@ import { formItemValidateStates } from 'element-plus';
                 
             </el-form-item>
             </el-form>
+                <el-button class="btn" type="primary" size="large" @click="submitForm(ruleFormRef)">登录</el-button>
+                
+            </div>
+            <div class="footer">
+                <p>还没有账户？<router-link to="/auth/register">去注册</router-link></p>
+
+            </div>
         </div>
-    </div>
+
 </template>
 <style scoped lang="scss">
 .container {
@@ -66,6 +82,17 @@ import { formItemValidateStates } from 'element-plus';
                 color: #6b7280;
             }
         }
+        }
+    }
+    .form-container {
+        margin-top: 40px;
+        .btn{
+            margin-top: 40px;
+            width: 100%;
+        }
+        .footer{
+            padding:30px;
+            text-align: center;
         }
     }
 </style>
