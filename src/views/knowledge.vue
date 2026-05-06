@@ -77,7 +77,7 @@ onMounted(async() => {
         <Tablesearch :formItem="formItem" @search="handleSearch" />
         <!--回调函数在组件内部调用然后拿到form表单的结果 -->
         <el-table :data ="tableData" style="width: 100%;margin-top: 25px;">
-            <el-table-column  label="文章标题"  >
+            <el-table-column  width="450" label="文章标题" fixed="left" >
                 <template #default="scope">
                     <!-- 获取当前行数据 -->
                     <div style="display: flex; align-items: center"></div>
@@ -100,7 +100,7 @@ onMounted(async() => {
             <el-table-column  prop="readCount" label="阅读量" width="150" />    
             <el-table-column  prop="publishedAt" label="发布时间" width="150" />    
 
-            <el-table-column  label="操作" width="240" >
+            <el-table-column  label="操作" width="240" fixed="right">
                 <template #default="scope">
                     <el-button text type ="primary">编辑</el-button>
                     <el-button v-if ="scope.row.status === 0 ||scope.row.status === 2" text type ="success">发布</el-button>
