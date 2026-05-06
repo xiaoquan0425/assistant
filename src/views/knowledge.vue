@@ -77,7 +77,7 @@ onMounted(async() => {
         <Tablesearch :formItem="formItem" @search="handleSearch" />
         <!--回调函数在组件内部调用然后拿到form表单的结果 -->
         <el-table :data ="tableData" style="width: 100%;margin-top: 25px;">
-            <el-table-column  label="文章标题" width="200" >
+            <el-table-column  label="文章标题"  >
                 <template #default="scope">
                     <!-- 获取当前行数据 -->
                     <div style="display: flex; align-items: center"></div>
@@ -85,12 +85,27 @@ onMounted(async() => {
                     <span >{{ scope.row.title }}</span>
                 </template>
             </el-table-column>
+            <!-- 如果要实现自定义有一列是不能设置宽度的 -->
+
             <el-table-column  label="分类" width="200" >
                 <template #default="scope">
                     <!-- 获取当前行数据 -->
                     <div style="display: flex; align-items: center"></div>
                     <el-icon><timer /></el-icon>
-                    <span >{{categoryMap[ scope.row.title ]}}</span>
+                    <span >{{categoryMap[ scope.row.categoryId ]}}</span>
+                </template>
+            </el-table-column>
+            <!-- 这一块不是自定义的内容所以直接用传统的格式写 -->
+            <el-table-column  prop="authorName" label="作者" width="150" />    
+            <el-table-column  prop="readCount" label="阅读量" width="150" />    
+            <el-table-column  prop="publishedAt" label="发布时间" width="150" />    
+
+            <el-table-column  label="操作" width="240" >
+                <template #default="scope">
+                    <el-button text type ="primary">编辑</el-button>
+                    <el-button v-if ="scope.row.status === 0 ||scope.row.status === 2" text type ="success">发布</el-button>
+                    <el-button v-if ="scope.row.status === 1" text type ="warning">下线</el-button>
+                    <el-button text type ="danger">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
