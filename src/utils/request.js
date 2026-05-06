@@ -23,7 +23,7 @@ service.interceptors.response.use(response => {
     //对响应数据做点什么
     const { data, config } = response
     //处理业务状态码
-    if (data.code === '200') {
+    if (data.code === '200' || data.code === 200) {
         return data.data
     } else {
         if (data.code === '-1') {

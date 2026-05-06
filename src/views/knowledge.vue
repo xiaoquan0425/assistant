@@ -3,6 +3,7 @@ import {onMounted, ref, reactive } from 'vue';
 import PageHead from '@/components/PageHead.vue';
 import Tablesearch from '@/components/Tablesearch.vue';
 import { categoryTree,articlePage} from '@/api/admin';
+import { Timer } from '@element-plus/icons-vue';
 
 const formItem = [
     {comp:'input',prop:'title',label:'文章标题',placeholder:'请输入文章标题'},
@@ -13,7 +14,6 @@ const formItem = [
     },{
         label:'已发布',
         value:1
-    
 },{
         label:'已下线',
         value:2
@@ -36,17 +36,20 @@ const categories = ref([])
 //列表数据
 const tableData = ref([])//在调接口的时候要把data赋值
 
-const handleSearch = async(formData) => {//获取列表数据
-    console.log(formData)
+const handleSearch = async (formData) => {//获取列表数据
     const params = {
         ...pagination,
         ...formData
     }
 
     const data = await articlePage(params)
-    console.log(data)
     tableData.value = data.records
-    
+    pagination.total = data.total
+}
+
+const handleChange = (page) => {
+    pagination.currentPage = page
+    handleSearch()
 }
 
 onMounted(async() => {
@@ -62,6 +65,7 @@ onMounted(async() => {
     //获取列表数据
     handleSearch()
 })
+
 
 </script>
 
@@ -109,5 +113,11 @@ onMounted(async() => {
                 </template>
             </el-table-column>
         </el-table>
+        <el-pagination 
+        style="margin-top: 25px"
+        :page-size="pagination.size"
+        layout="prev, pager, next" 
+        :total="pagination.total" 
+        @change="handleChange"/>
     </div>
 </template>
