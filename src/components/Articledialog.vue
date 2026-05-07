@@ -1,6 +1,6 @@
 <template>
     <el-dialog         
-        title="文章详情"
+        title="新增文章"
         v-model="dialogVisible"
         width="50%"
         @close="handleClose"
@@ -17,7 +17,7 @@
             <el-form-item label="文章摘要" prop="summary">
                 <el-input type="textarea" v-model="formData.summary" placeholder="请输入文章摘要（可选）" maxlength="1000" show-word-limit :row="4"></el-input>
             </el-form-item>
-            <el-form-item label="文章标签" prop="tags">
+            <el-form-item label="标签" prop="tags">
                 <el-select v-model="formData.tagArray" placeholder="请输入文章标签" multiple filterable allow-create style="width:100%">
                     <el-option v-for="tag in commonTags"
                     :key ="tag"
@@ -26,11 +26,28 @@
                      />
                 </el-select>
             </el-form-item>
+            <el-form-item label="封面图片">
+                <div class="cover-upload">
+                    <el-upload
+                        class="avatar-uploader"
+                        action="#"
+                        :before-upload="beforeUpload"
+                        :http-request="handleloadRequest"
+                        accept="image/*"
+                        >
+                        <div v-if="!imgUrl" class="cover-placeholder">
+                            <p>点击上传封面</p>
+                        </div>
+                        <img v-else :src="imgUrl" class="cover-image" alt="封面图片" />
+                    </el-upload>
+                </div>
+            </el-form-item>
         </el-form>
     </el-dialog>
 </template>
 
 <script setup>
+import { uploadPropsDefaults } from 'element-plus'
 import { ref, reactive, computed} from 'vue'
 
 // const dialogVisible = ref(false)
@@ -89,6 +106,25 @@ const commonTags = [
   '冥想', '正念', '放松', '心理健康', '自我成长',
   '人际关系', '工作压力', '学习方法', '生活技巧'
 ]
+//上传
+const imgUrl = ref('')
 
+const beforeUpload = () => {
+    
+}
+const handleloadRequest = () => {
 
+}
 </script>
+<style lang ="scss" scoped>
+.cover-placeholder{
+    width: 200px;
+    height: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color:#8b949e;
+    background: #f6f8fa;
+}
+</style>
