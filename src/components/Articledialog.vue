@@ -15,7 +15,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="文章摘要" prop="summary">
-                <el-input type="textarea" v-model="formData.summary" placeholder="请输入文章摘要（可选）" maxlength="1000" show-word-limit :row="4"></el-input>
+                <el-input type="textarea" v-model="formData.summary" placeholder="请输入文章摘要（可选）" maxlength="1000" show-word-limit :rows="4"></el-input>
             </el-form-item>
             <el-form-item label="标签" prop="tags">
                 <el-select v-model="formData.tagArray" placeholder="请输入文章标签" multiple filterable allow-create style="width:100%">
@@ -26,19 +26,21 @@
                      />
                 </el-select>
             </el-form-item>
-            <el-form-item label="封面图片">
+             <el-form-item label="封面图片">
                 <div class="cover-upload">
                     <el-upload
                         class="avatar-uploader"
                         action="#"
+                        :show-file-list="false"
                         :before-upload="beforeUpload"
-                        :http-request="handleloadRequest"
+                        :http-request="handleUploadRequest"
                         accept="image/*"
                         >
                         <div v-if="!imgUrl" class="cover-placeholder">
                             <p>点击上传封面</p>
                         </div>
                         <img v-else :src="imgUrl" class="cover-image" alt="封面图片" />
+                        
                     </el-upload>
                 </div>
             </el-form-item>
@@ -49,6 +51,7 @@
 <script setup>
 import { uploadPropsDefaults } from 'element-plus'
 import { ref, reactive, computed} from 'vue'
+import { ElMessage } from 'element-plus'
 
 // const dialogVisible = ref(false)
 
@@ -109,10 +112,25 @@ const commonTags = [
 //上传
 const imgUrl = ref('')
 
-const beforeUpload = () => {
-    
+const beforeUpload = (file) => {
+    //上传文件校验
+    console.log(file)
+    const isImage=file.type.startsWith('image/')//判断是否是图片
+    const isLt2M = file.size / 1024 / 1024 < 5;//判断文件大小
+    if(!isImage){
+        ElMessage.error('请选择图片文件')
+       return false 
+    }
+    if(!isLt2M){
+        ElMessage.error('图片大小不能超过5MB')
+       return false 
+    }
+
+    return true
 }
-const handleloadRequest = () => {
+
+
+const handleUploadRequest = () => {
 
 }
 </script>
