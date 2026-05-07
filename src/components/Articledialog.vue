@@ -49,11 +49,10 @@
 </template>
 
 <script setup>
-import { uploadPropsDefaults } from 'element-plus'
 import { ref, reactive, computed} from 'vue'
 import { ElMessage } from 'element-plus'
-
-// const dialogVisible = ref(false)
+import { uploadFile } from '@/api/admin'
+import crypto from 'crypto'
 
 const props = defineProps({
     modelValue: {
@@ -80,17 +79,17 @@ const dialogVisible = computed({
 })
 
 const handleClose = () => {//关闭弹窗
-   dialogVisible.value = false
+    emit('update:modelValue',false)
 }
 //表单数据
 const formData = reactive({
-    "title": "string",
-    "content": "string",
-    "coverImage": "string",
+    "title": "",
+    "content": "",
+    "coverImage": "",
     "categoryId": 1,
-    "summary": "string",
+    "summary": "",
     "tags": [],
-    "id": "string"
+    "id": ""
 })
 
 const rules = reactive({
@@ -130,9 +129,18 @@ const beforeUpload = (file) => {
 }
 
 
-const handleUploadRequest = () => {
-
+const handleUploadRequest = async({file}) => {//先解构
+    //UUID生成
+    const businessId = crypto.randomUUID()//生成一个唯一标识符
+    const fileRes = await uploadFile(file,{
+        businessId:businessId
+    })
+    if (fileRes.code === 200) {
+        imgUrl.value = fileRes.data
+        formData.coverImage = fileRes.data
+    }
 }
+
 </script>
 <style lang ="scss" scoped>
 .cover-placeholder{

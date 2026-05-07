@@ -7,6 +7,8 @@ import { categoryTree,articlePage} from '@/api/admin';
 import { Timer } from '@element-plus/icons-vue';
 import Articledialog from '@/components/Articledialog.vue';
 
+const dialogVisible = ref(false)
+
 const formItem = [
     {comp:'input',prop:'title',label:'文章标题',placeholder:'请输入文章标题'},
     {comp:'select',prop:'categoryId',label:'分类',placeholder:'请选择分类'},
