@@ -1,9 +1,11 @@
 <script setup>
+
 import {onMounted, ref, reactive } from 'vue';
 import PageHead from '@/components/PageHead.vue';
 import Tablesearch from '@/components/Tablesearch.vue';
 import { categoryTree,articlePage} from '@/api/admin';
 import { Timer } from '@element-plus/icons-vue';
+import Articledialog from '@/components/Articledialog.vue';
 
 const formItem = [
     {comp:'input',prop:'title',label:'文章标题',placeholder:'请输入文章标题'},
@@ -36,15 +38,18 @@ const categories = ref([])
 //列表数据
 const tableData = ref([])//在调接口的时候要把data赋值
 
-const handleSearch = async (formData) => {//获取列表数据
+const handleSearch = async (formData = {}) => {
+    //获取列表数据
+    console.log('列表参数',formData)
     const params = {
         ...pagination,
         ...formData
     }
 
-    const data = await articlePage(params)
-    tableData.value = data.records
-    pagination.total = data.total
+    const {records, total} = await articlePage(params)
+    tableData.value = records
+    pagination.total = total
+
 }
 
 const handleChange = (page) => {
@@ -66,7 +71,6 @@ onMounted(async() => {
     handleSearch()
 })
 
-
 </script>
 
 
@@ -74,7 +78,7 @@ onMounted(async() => {
     <div>
         <PageHead title="知识文章">
             <template #buttons>
-                <el-button type="primary">新增</el-button>
+                <el-button @click="dialogVisible = true" type="primary">新增</el-button>
                 <el-button type="primary">编辑</el-button>
             </template>
         </PageHead>
@@ -113,11 +117,13 @@ onMounted(async() => {
                 </template>
             </el-table-column>
         </el-table>
-        <el-pagination 
+        <!--  <el-pagination 
         style="margin-top: 25px"
         :page-size="pagination.size"
         layout="prev, pager, next" 
         :total="pagination.total" 
-        @change="handleChange"/>
+        @change="handleChange"></el-pagination> -->
+
+        <Articledialog v-model:modelValue ="dialogVisible" />
     </div>
 </template>
