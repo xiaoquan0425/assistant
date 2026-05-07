@@ -14,13 +14,22 @@
                     <el-option v-for="item in props.categories" :key="item.value" :label="item.label" :value="item.value"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="文章摘要" prop="content">
+            <el-form-item label="文章摘要" prop="summary">
+                <el-input type="textarea" v-model="formData.summary" placeholder="请输入文章摘要（可选）" maxlength="1000" show-word-limit :row="4"></el-input>
             </el-form-item>
-          
-            
+            <el-form-item label="文章标签" prop="tags">
+                <el-select v-model="formData.tagArray" placeholder="请输入文章标签" multiple filterable allow-create style="width:100%">
+                    <el-option v-for="tag in commonTags"
+                    :key ="tag"
+                    :label="tag"
+                    :value="tag"
+                     />
+                </el-select>
+            </el-form-item>
         </el-form>
     </el-dialog>
 </template>
+
 <script setup>
 import { ref, reactive, computed} from 'vue'
 
@@ -60,7 +69,7 @@ const formData = reactive({
     "coverImage": "string",
     "categoryId": 1,
     "summary": "string",
-    "tags": "string",
+    "tags": [],
     "id": "string"
 })
 
@@ -68,6 +77,18 @@ const rules = reactive({
     title: [
         { required: true, message: '请输入文章标题', trigger: 'blur' },
         {max: 200, message: '长度最多200个字符', trigger: 'blur' }
+    ],
+    categoryId: [
+        { required: true, message: '请选择分类', trigger: 'change' },
     ]
+  
 })
+
+const commonTags = [
+  '情绪管理', '焦虑', '抑郁', '压力', '睡眠', 
+  '冥想', '正念', '放松', '心理健康', '自我成长',
+  '人际关系', '工作压力', '学习方法', '生活技巧'
+]
+
+
 </script>
