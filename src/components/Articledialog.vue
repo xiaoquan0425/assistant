@@ -7,7 +7,7 @@
         >
         <el-form :model="formData":rules="rules" ref="formRef" label-width="120px">
             <el-form-item label="文章标题" prop="title">
-                <el-input v-model="formData.title" placeholder="请输入文章标题" maxlength="200"></el-input>
+                <el-input v-model="formData.title" placeholder="请输入文章标题" maxlength="200" show-word-limit></el-input>
             </el-form-item>
             <el-form-item label="作者" prop="author">
                 <el-input v-model="formData.author"></el-input>
@@ -41,8 +41,8 @@ const dialogVisible = computed({
 
 })
 
-const handleClose = () => {
-   
+const handleClose = () => {//关闭弹窗
+   dialogVisible.value = false
 }
 //表单数据
 const formData = reactive({
