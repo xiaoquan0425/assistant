@@ -7,11 +7,16 @@
         >
         <el-form :model="formData":rules="rules" ref="formRef" label-width="120px">
             <el-form-item label="文章标题" prop="title">
-                <el-input v-model="formData.title" placeholder="请输入文章标题" maxlength="200" show-word-limit></el-input>
+                <el-input v-model="formData.title" placeholder="请输入文章标题" maxlength="200" show-word-limit clearable></el-input>
             </el-form-item>
-            <el-form-item label="作者" prop="author">
-                <el-input v-model="formData.author"></el-input>
+            <el-form-item label="所属分类" prop="categoryId">
+                <el-select v-model="formData.categoryId" placeholder="请选择分类" clearable>
+                    <el-option v-for="item in props.categories" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                </el-select>
             </el-form-item>
+            <el-form-item label="文章摘要" prop="content">
+            </el-form-item>
+          
             
         </el-form>
     </el-dialog>
@@ -25,6 +30,10 @@ const props = defineProps({
     modelValue: {
         type: Boolean,
         default: false
+    },
+    categories: {
+        type: Array,
+        default: () => []//数组对象
     }
 })
 //子组件不能直接修改props的值，加一个计算属性
@@ -49,7 +58,7 @@ const formData = reactive({
     "title": "string",
     "content": "string",
     "coverImage": "string",
-    "categoryId": 0,
+    "categoryId": 1,
     "summary": "string",
     "tags": "string",
     "id": "string"

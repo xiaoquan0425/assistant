@@ -66,6 +66,7 @@ onMounted(async() => {
             value: item.id
         }
     })
+    console.log('分类列表',categories.value)
     formItem[1].options = categories.value//将分类列表赋值给formItem
     //获取列表数据
     handleSearch()
@@ -124,6 +125,6 @@ onMounted(async() => {
         :total="pagination.total" 
         @change="handleChange"></el-pagination> -->
 
-        <Articledialog v-model:modelValue ="dialogVisible" />
+        <Articledialog v-model:modelValue ="dialogVisible" :categories="categories" />
     </div>
 </template>
