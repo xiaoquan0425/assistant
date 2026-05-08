@@ -42,6 +42,9 @@
                         <img v-else :src="imgUrl" class="cover-image" alt="封面图片" />
                         
                     </el-upload>
+                    <div v-if="imgUrl" class="cover-remove">
+                        <el-button type="danger" size="mini" @click="handleRemove">移除封面</el-button>
+                    </div>
                 </div>
             </el-form-item>
         </el-form>
@@ -52,7 +55,7 @@
 import { ref, reactive, computed} from 'vue'
 import { ElMessage } from 'element-plus'
 import { uploadFile } from '@/api/admin'
-import crypto from 'crypto'
+import { fileBaseUrl } from '@/config'
 
 const props = defineProps({
     modelValue: {
@@ -113,7 +116,7 @@ const imgUrl = ref('')
 
 const beforeUpload = (file) => {
     //上传文件校验
-    console.log(file)
+    console.log(file,"文件信息")
     const isImage=file.type.startsWith('image/')//判断是否是图片
     const isLt2M = file.size / 1024 / 1024 < 5;//判断文件大小
     if(!isImage){
@@ -135,13 +138,22 @@ const handleUploadRequest = async({file}) => {//先解构
     const fileRes = await uploadFile(file,{
         businessId:businessId
     })
-    if (fileRes.code === 200) {
-        imgUrl.value = fileRes.data
-        formData.coverImage = fileRes.data
-    }
+    console.log(fileRes)
+    //拼接图片地址
+    imgUrl.value = `${fileBaseUrl}${fileRes.filePath}`//后端接收相对路径,不需要完整路径
+    formData.coverImage = fileRes.filePath
+
 }
 
+const handleRemove = () => {
+    imgUrl.value = ''
+    formData.coverImage = ''
+}
 </script>
+
+
+
+
 <style lang ="scss" scoped>
 .cover-placeholder{
     width: 200px;
@@ -152,5 +164,10 @@ const handleUploadRequest = async({file}) => {//先解构
     justify-content: center;
     color:#8b949e;
     background: #f6f8fa;
+}
+.cover-image{
+    width: 200px;
+    height: 120px;
+    display: block;
 }
 </style>
