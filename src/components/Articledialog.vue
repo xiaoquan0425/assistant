@@ -176,6 +176,7 @@ const handleEditorCreated = (editor) => {
         })
        
 }
+}
 </script>
 
 
