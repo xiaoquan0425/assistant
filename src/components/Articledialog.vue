@@ -58,15 +58,25 @@
                  />
             </el-form-item>
         </el-form>
+        <div v-if="btnPreview"> 
+            <h3>内容预览</h3>
+            <div v-html="formData.content"></div>
+        </div>
+        <template #footer>
+                <el-button @click="btnPreview = !btnPreview">{{ btnPreview ?'隐藏预览':'预览' }}</el-button>
+                <el-button @click="handleClose">取消</el-button>
+                <el-button @click="handleSubmit":loading="loading">创建文章</el-button>
+        </template>
     </el-dialog>
 </template>
 
 <script setup>
 import { ref, reactive, computed,nextTick} from 'vue'
 import { ElMessage } from 'element-plus'
-import { uploadFile } from '@/api/admin'
+import { uploadFile,createArticle } from '@/api/admin'
 import { fileBaseUrl } from '@/config'
 import RichTextEditor from '@/components/RichTextEditor.vue'
+
 
 
 const props = defineProps({
@@ -177,6 +187,14 @@ const handleEditorCreated = (editor) => {
        
 }
 }
+
+const btnPreview = ref(false)
+
+//提交
+const loading =ref(false)
+//新增和编辑的接口是一样的 如果不上传id就是新增
+const handleSubmit = async () => {}
+
 </script>
 
 

@@ -25,3 +25,6 @@ export function uploadFile(file, businessInfo) {
     }
     )
 }
+export function createArticle(data) {
+    return service.post('/knowledge/article', data)
+}
