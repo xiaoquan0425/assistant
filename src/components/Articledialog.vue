@@ -47,6 +47,16 @@
                     </div>
                 </div>
             </el-form-item>
+            <el-form-item label="文章内容" props="content">
+                <RichTextEditor
+                v-model="formData.content"
+                placeholder="请输入文章内容,支持富文本格式"
+                :maxCharCount="5000"
+                @change="handleContentChange"
+                @created="handleEditorCreated"
+                min-height="400px"
+                 />
+            </el-form-item>
         </el-form>
     </el-dialog>
 </template>
@@ -56,7 +66,8 @@ import { ref, reactive, computed} from 'vue'
 import { ElMessage } from 'element-plus'
 import { uploadFile } from '@/api/admin'
 import { fileBaseUrl } from '@/config'
-import RichTextEditor from '@/RichTextEditor.vue'
+import RichTextEditor from '@/components/RichTextEditor.vue'
+
 
 const props = defineProps({
     modelValue: {
@@ -149,6 +160,13 @@ const handleUploadRequest = async({file}) => {//先解构
 const handleRemove = () => {
     imgUrl.value = ''
     formData.coverImage = ''
+}
+
+const handleContentChange = (content) => {
+    
+}
+const handleEditorCreated = (editor) => {
+    
 }
 </script>
 

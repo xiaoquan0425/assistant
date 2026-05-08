@@ -361,8 +361,13 @@ onBeforeUnmount(() => {
 }
 
 /* 确保字体样式正确应用 - 简化版本 */
-:deep(.w-e-text-container [data-slate-editor] *) {
-  /* 不设置任何强制字体，让编辑器处理 */
+:deep(.w-e-text-container *) {
+  /* 继承父元素的字体样式 */
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  color: inherit;
 }
 
 /* 颜色面板样式优化 */
