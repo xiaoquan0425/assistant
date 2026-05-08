@@ -56,6 +56,7 @@ import { ref, reactive, computed} from 'vue'
 import { ElMessage } from 'element-plus'
 import { uploadFile } from '@/api/admin'
 import { fileBaseUrl } from '@/config'
+import RichTextEditor from '@/RichTextEditor.vue'
 
 const props = defineProps({
     modelValue: {
