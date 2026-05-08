@@ -62,7 +62,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed} from 'vue'
+import { ref, reactive, computed,nextTick} from 'vue'
 import { ElMessage } from 'element-plus'
 import { uploadFile } from '@/api/admin'
 import { fileBaseUrl } from '@/config'
@@ -162,11 +162,19 @@ const handleRemove = () => {
     formData.coverImage = ''
 }
 
-const handleContentChange = (content) => {
-    
+const handleContentChange = (data) => {
+    formData.content = data.html
+
 }
+const editorInstance = ref(null)
 const handleEditorCreated = (editor) => {
-    
+    editorInstance.value = editor
+    //编辑
+    if(formData.content && editor){
+        nextTick(()=>{
+            editorInstance.value.setHtml(formData.content)
+        })
+       
 }
 </script>
 
