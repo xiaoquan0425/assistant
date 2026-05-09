@@ -47,7 +47,7 @@
                     </div>
                 </div>
             </el-form-item>
-            <el-form-item label="文章内容" props="content">
+            <el-form-item label="文章内容" prop="content">
                 <RichTextEditor
                 v-model="formData.content"
                 placeholder="请输入文章内容,支持富文本格式"
@@ -124,6 +124,10 @@ const rules = reactive({
     ],
     categoryId: [
         { required: true, message: '请选择分类', trigger: 'change' },
+    ],
+    content:[
+        { required: true, message: '请输入文章内容', trigger: 'change' }, 
+        {max: 5000, message: '文章内容最多5000个字符', trigger: 'change' }
     ]
   
 })
@@ -191,9 +195,29 @@ const handleEditorCreated = (editor) => {
 const btnPreview = ref(false)
 
 //提交
+const formRef = ref()//直接用ref传，不需要作为handlesubmit的参数
+//表单校验，先拿到表单的dom对象
 const loading =ref(false)
+
 //新增和编辑的接口是一样的 如果不上传id就是新增
-const handleSubmit = async () => {}
+const handleSubmit =() => {
+    formRef.value.validate((valid,field) => {
+        if(valid){
+            loading.value = true
+        }
+        const submitData ={
+            ...formData,
+            tags: formData.tagArray.join(',')//因为前面组件里需要数组用的tagArray，后端接口是tags，所以这里写成这样
+
+        }
+        delete submitData.tagArray
+        createArticle(submitData).then(res => {
+            loading.value = false
+            
+        })
+    
+    })
+}
 
 </script>
 

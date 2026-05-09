@@ -127,6 +127,6 @@ onMounted(async() => {
         :total="pagination.total" 
         @change="handleChange"></el-pagination> -->
 
-        <Articledialog v-model:modelValue ="dialogVisible" :categories="categories" />
+        <Articledialog v-model:modelValue ="dialogVisible" :categories="categories" @success="handleSuccess"/>
     </div>
 </template>
