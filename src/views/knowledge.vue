@@ -79,16 +79,7 @@ const handleEdit = (row) => {
 }
 }
 
-//监听编辑数据
-watch(() => props.article,(newVal)=>{
-    if(newVal){
-        Object.assign(currentArticle.value,newVal)//可以接收多个参数
-        //使用现有id
-        businessId.value = newVal.id
-        //封面Url
-        imgUrl.value = fileBaseUrl + newVal.coverImage
-    }
-})
+
 
 onMounted(async() => {
     const data = await categoryTree()
@@ -151,12 +142,12 @@ onMounted(async() => {
                 </template>
             </el-table-column>
         </el-table>
-        <!--  <el-pagination 
+         <el-pagination 
         style="margin-top: 25px"
         :page-size="pagination.size"
         layout="prev, pager, next" 
         :total="pagination.total" 
-        @change="handleChange"></el-pagination> -->
+        @change="handleChange"></el-pagination>
 
         <Articledialog v-model:modelValue ="dialogVisible" :article="currentArticle" :categories="categories" @success="handleSuccess"/>
     </div>

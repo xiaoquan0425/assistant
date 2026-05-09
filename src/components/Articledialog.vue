@@ -71,7 +71,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed,nextTick} from 'vue'
+import { ref, reactive, computed,nextTick, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import { uploadFile,createArticle } from '@/api/admin'
 import { fileBaseUrl } from '@/config'
@@ -164,12 +164,12 @@ const beforeUpload = (file) => {
     return true
 }
 
-const bussinessId = ref(null)
+const businessId = ref(null)
 const handleUploadRequest = async({file}) => {//先解构
     //UUID生成
     businessId.value = crypto.randomUUID()//生成一个唯一标识符
     const fileRes = await uploadFile(file,{
-        businessId:businessId
+        businessId:businessId.value
     })
     console.log(fileRes)
     //拼接图片地址
@@ -226,6 +226,16 @@ const handleSubmit =() => {
     })
 }
 
+//监听编辑数据
+watch(() => props.article,(newVal)=>{
+    if(newVal){
+        Object.assign(formData,newVal)//可以接收多个参数
+        //使用现有id
+        businessId.value = newVal.id
+        //封面Url
+        imgUrl.value = fileBaseUrl + newVal.coverImage
+    }
+})
 </script>
 
 
