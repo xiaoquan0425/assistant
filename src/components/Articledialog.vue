@@ -91,7 +91,7 @@ const props = defineProps({
 })
 //子组件不能直接修改props的值，加一个计算属性
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue','success'])
 
 const dialogVisible = computed({
     get(){
@@ -213,7 +213,7 @@ const handleSubmit =() => {
         delete submitData.tagArray
         createArticle(submitData).then(res => {
             loading.value = false
-            
+            emit('success')
         })
     
     })

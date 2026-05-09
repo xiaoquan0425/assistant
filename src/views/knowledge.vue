@@ -7,7 +7,11 @@ import { categoryTree,articlePage} from '@/api/admin';
 import { Timer } from '@element-plus/icons-vue';
 import Articledialog from '@/components/Articledialog.vue';
 
+//新增文章弹窗
 const dialogVisible = ref(false)
+const handleSuccess = () => {
+    
+}
 
 const formItem = [
     {comp:'input',prop:'title',label:'文章标题',placeholder:'请输入文章标题'},
@@ -109,7 +113,7 @@ onMounted(async() => {
             <!-- 这一块不是自定义的内容所以直接用传统的格式写 -->
             <el-table-column  prop="authorName" label="作者" width="150" />    
             <el-table-column  prop="readCount" label="阅读量" width="150" />    
-            <el-table-column  prop="publishedAt" label="发布时间" width="150" />    
+            <el-table-column  prop="updatedAt" label="发布时间" width="150" />    
 
             <el-table-column  label="操作" width="240" fixed="right">
                 <template #default="scope">
