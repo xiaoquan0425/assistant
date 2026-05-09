@@ -164,10 +164,10 @@ const beforeUpload = (file) => {
     return true
 }
 
-
+const bussinessId = ref(null)
 const handleUploadRequest = async({file}) => {//先解构
     //UUID生成
-    const businessId = crypto.randomUUID()//生成一个唯一标识符
+    businessId.value = crypto.randomUUID()//生成一个唯一标识符
     const fileRes = await uploadFile(file,{
         businessId:businessId
     })

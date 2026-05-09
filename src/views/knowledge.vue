@@ -6,6 +6,7 @@ import Tablesearch from '@/components/Tablesearch.vue';
 import { categoryTree,articlePage,getArticleDetail} from '@/api/admin';
 import { Timer } from '@element-plus/icons-vue';
 import Articledialog from '@/components/Articledialog.vue';
+import { fileBaseUrl } from '../config';
 
 
 const formItem = [
@@ -77,6 +78,18 @@ const handleEdit = (row) => {
     })
 }
 }
+
+//监听编辑数据
+watch(() => props.article,(newVal)=>{
+    if(newVal){
+        Object.assign(currentArticle.value,newVal)//可以接收多个参数
+        //使用现有id
+        businessId.value = newVal.id
+        //封面Url
+        imgUrl.value = fileBaseUrl + newVal.coverImage
+    }
+})
+
 onMounted(async() => {
     const data = await categoryTree()
     categories.value = data.map(item => {
