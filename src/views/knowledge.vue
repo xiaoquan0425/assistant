@@ -117,7 +117,7 @@ onMounted(async() => {
 
             <el-table-column  label="操作" width="240" fixed="right">
                 <template #default="scope">
-                    <el-button text type ="primary">编辑</el-button>
+                    <el-button @click="handleEdit(scope.row)" v-if ="scope.row.status === 0 ||scope.row.status === 1"xt type ="primary">编辑</el-button>
                     <el-button v-if ="scope.row.status === 0 ||scope.row.status === 2" text type ="success">发布</el-button>
                     <el-button v-if ="scope.row.status === 1" text type ="warning">下线</el-button>
                     <el-button text type ="danger">删除</el-button>
