@@ -1,6 +1,6 @@
 <template>
     <el-dialog         
-        title="新增文章"
+        :title="isEdit ? '编辑文章':'新增文章'"
         v-model="dialogVisible"
         width="50%"
         @close="handleClose"
@@ -65,7 +65,7 @@
         <template #footer>
                 <el-button @click="btnPreview = !btnPreview">{{ btnPreview ?'隐藏预览':'预览' }}</el-button>
                 <el-button @click="handleClose">取消</el-button>
-                <el-button @click="handleSubmit":loading="loading">创建文章</el-button>
+                <el-button type="primary"@click="handleSubmit":loading="loading">{{ isEdit ?'更新文章':'创建文章' }}</el-button>
         </template>
     </el-dialog>
 </template>
@@ -78,6 +78,7 @@ import { fileBaseUrl } from '@/config'
 import RichTextEditor from '@/components/RichTextEditor.vue'
 
 
+//子组件
 
 const props = defineProps({
     modelValue: {
@@ -87,6 +88,10 @@ const props = defineProps({
     categories: {
         type: Array,
         default: () => []//数组对象
+    },
+    article: {
+        type: Object,
+        default: null//弄成null是因为要判断当前是新增还是编辑
     }
 })
 //子组件不能直接修改props的值，加一个计算属性
@@ -102,6 +107,8 @@ const dialogVisible = computed({
     }
 
 })
+
+const isEdit = computed(()=> !!props.article?.id)//判断是否是编辑
 
 const handleClose = () => {//关闭弹窗
     emit('update:modelValue',false)

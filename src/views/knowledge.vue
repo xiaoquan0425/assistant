@@ -3,15 +3,10 @@
 import {onMounted, ref, reactive } from 'vue';
 import PageHead from '@/components/PageHead.vue';
 import Tablesearch from '@/components/Tablesearch.vue';
-import { categoryTree,articlePage} from '@/api/admin';
+import { categoryTree,articlePage,getArticleDetail} from '@/api/admin';
 import { Timer } from '@element-plus/icons-vue';
 import Articledialog from '@/components/Articledialog.vue';
 
-//新增文章弹窗
-const dialogVisible = ref(false)
-const handleSuccess = () => {
-    
-}
 
 const formItem = [
     {comp:'input',prop:'title',label:'文章标题',placeholder:'请输入文章标题'},
@@ -63,6 +58,25 @@ const handleChange = (page) => {
     handleSearch()
 }
 
+//新增文章弹窗
+const dialogVisible = ref(false)
+const currentArticle = ref(null)
+const handleSuccess = () => {
+}
+const handleEdit = (row) => {
+    if(!row.id){
+        //新增
+        currentArticle.value = null
+        dialogVisible.value = true
+}else{
+    //编辑
+    getArticleDetail(row.id).then(res => {
+        console.log('文章详情',res)
+        currentArticle.value = res
+        dialogVisible.value = true
+    })
+}
+}
 onMounted(async() => {
     const data = await categoryTree()
     categories.value = data.map(item => {
@@ -85,8 +99,8 @@ onMounted(async() => {
     <div>
         <PageHead title="知识文章">
             <template #buttons>
-                <el-button @click="dialogVisible = true" type="primary">新增</el-button>
-                <el-button type="primary">编辑</el-button>
+                <el-button @click="handleEdit({})" type="primary">新增</el-button>
+                <!-- 这里传入空对象 -->
             </template>
         </PageHead>
         <Tablesearch :formItem="formItem" @search="handleSearch" />
@@ -117,7 +131,7 @@ onMounted(async() => {
 
             <el-table-column  label="操作" width="240" fixed="right">
                 <template #default="scope">
-                    <el-button @click="handleEdit(scope.row)" v-if ="scope.row.status === 0 ||scope.row.status === 1"xt type ="primary">编辑</el-button>
+                    <el-button @click="handleEdit(scope.row)" text type ="primary">编辑</el-button>
                     <el-button v-if ="scope.row.status === 0 ||scope.row.status === 2" text type ="success">发布</el-button>
                     <el-button v-if ="scope.row.status === 1" text type ="warning">下线</el-button>
                     <el-button text type ="danger">删除</el-button>
@@ -131,6 +145,6 @@ onMounted(async() => {
         :total="pagination.total" 
         @change="handleChange"></el-pagination> -->
 
-        <Articledialog v-model:modelValue ="dialogVisible" :categories="categories" @success="handleSuccess"/>
+        <Articledialog v-model:modelValue ="dialogVisible" :article="currentArticle" :categories="categories" @success="handleSuccess"/>
     </div>
 </template>
