@@ -73,7 +73,7 @@
 <script setup>
 import { ref, reactive, computed,nextTick, watch } from 'vue'
 import { ElMessage } from 'element-plus'
-import { uploadFile,createArticle } from '@/api/admin'
+import { uploadFile,createArticle, updateArticle} from '@/api/admin'
 import { fileBaseUrl } from '@/config'
 import RichTextEditor from '@/components/RichTextEditor.vue'
 
@@ -111,8 +111,18 @@ const dialogVisible = computed({
 const isEdit = computed(()=> !!props.article?.id)//判断是否是编辑
 
 const handleClose = () => {//关闭弹窗
+    //重置表单
+    formRef.value.resetFields()//重新赋值formdata会很繁琐
+
+    businessId.value = null
+    formData.tagArray = []
+    handleRemove()
+
     emit('update:modelValue',false)
 }
+
+const loading = ref(false)
+
 //表单数据
 const formData = reactive({
     "title": "",
@@ -204,9 +214,7 @@ const btnPreview = ref(false)
 //提交
 const formRef = ref()//直接用ref传，不需要作为handlesubmit的参数
 //表单校验，先拿到表单的dom对象
-const loading =ref(false)
 
-//新增和编辑的接口是一样的 如果不上传id就是新增
 const handleSubmit =() => {
     formRef.value.validate((valid,field) => {
         if(valid){
@@ -218,10 +226,20 @@ const handleSubmit =() => {
 
         }
         delete submitData.tagArray
-        createArticle(submitData).then(res => {
+
+        if(isEdit.value){
+            submitData.id = businessId.value
+            createArticle(submitData).then(res => {
             loading.value = false
             emit('success')
         })
+        }else{
+            updateArticle(props.article.id,submitData).then(res => {
+                loading.value = false
+                emit('success')
+            })
+        }
+        
     
     })
 }
@@ -229,11 +247,14 @@ const handleSubmit =() => {
 //监听编辑数据
 watch(() => props.article,(newVal)=>{
     if(newVal){
+        nextTick(()=>{//创建弹窗是一个异步的过程
         Object.assign(formData,newVal)//可以接收多个参数
         //使用现有id
         businessId.value = newVal.id
         //封面Url
         imgUrl.value = fileBaseUrl + newVal.coverImage
+        })
+        
     }
 })
 </script>

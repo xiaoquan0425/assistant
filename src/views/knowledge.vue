@@ -63,6 +63,9 @@ const handleChange = (page) => {
 const dialogVisible = ref(false)
 const currentArticle = ref(null)
 const handleSuccess = () => {
+    //刷新
+    dialogVisible.value=false
+    handleSearch()
 }
 const handleEdit = (row) => {
     if(!row.id){
