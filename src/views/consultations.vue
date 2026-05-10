@@ -49,7 +49,13 @@
                         <div class="detail-value">{{ sessionDetail.messageCount }}</div>
                     </div>
                 </div>
-                <div class="message-container"></div>
+                <div class="message-container">
+                    <div classs="message-header">
+                        <h4>对话记录</h4>
+                    </div>
+                    <div class="message-list">
+                    </div>
+                </div>
             </div>
         </el-dialog>
     </div>
@@ -57,7 +63,7 @@
 <script setup>
 import PageHead from '@/components/PageHead.vue';
 import {ref,onMounted,reactive} from 'vue'
-import { getConsultationPage } from '@/api/admin';
+import { getConsultationPage,getSessionDetail} from '@/api/admin';
 
 const pagination = reactive({
     currentPage:1,
@@ -70,9 +76,15 @@ onMounted(()=>{
     handleSearch()
 })
 const sessionDetail = ref({})
+const sessionMessages = ref([])
 const viewSessionDetail = (row) => {
+
+    getSessionDetail(row.id).then(res=>{
+        console.log(res)
+        sessionMessages.value = res
     sessionDetail.value=row
     showDetailDialog.value = true
+    })
 }
 const handleChange = (page) => {
     pagination.currentPage = page
