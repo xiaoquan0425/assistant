@@ -19,7 +19,7 @@ service.interceptors.request.use(config => {
 }
 )
 //响应拦截器
-service.interceptors.response.use(response => {
+service.interceptors.response.use((response) => {
     //对响应数据做点什么
     const { data, config } = response
     //处理业务状态码

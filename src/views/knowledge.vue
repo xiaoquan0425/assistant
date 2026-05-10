@@ -139,8 +139,8 @@ onMounted(async() => {
             <el-table-column  label="操作" width="240" fixed="right">
                 <template #default="scope">
                     <el-button @click="handleEdit(scope.row)" text type ="primary">编辑</el-button>
-                    <el-button v-if ="scope.row.status === 0 ||scope.row.status === 2" text type ="success">发布</el-button>
-                    <el-button v-if ="scope.row.status === 1" text type ="warning">下线</el-button>
+                    <el-button @click="handlePublish(scope.row)" v-if ="scope.row.status === 0 ||scope.row.status === 2" text type ="success">发布</el-button>
+                    <el-button @click="handleUnpublish(scope.row)" v-if ="scope.row.status === 1" text type ="warning">下线</el-button>
                     <el-button text type ="danger">删除</el-button>
                 </template>
             </el-table-column>
