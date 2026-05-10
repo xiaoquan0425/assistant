@@ -19,7 +19,7 @@
             </el-table-column>
             <el-table-column label="操作" width="100">
                 <template #default="scope">
-                    <el-button type="primary" text @click="viewSessionDetail">详情</el-button>
+                    <el-button type="primary" text @click="viewSessionDetail(scope.row)">详情</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -29,6 +29,29 @@
         layout="prev, pager, next" 
         :total="pagination.total" 
         @change="handleChange"></el-pagination>
+        <el-dialog>
+            v-model="showDetailDialog"
+            title="咨询会话详情"
+            width="70%"
+            :close-on-click-modal="false"
+            <div class="session-detail">
+                <div class="detail-header">
+                    <div class="detail-row">
+                        <div class="detail-label">用户：</div>
+                        <div class="detail-value">{{ sessionDetail.userNickname }}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">开始时间：</div>
+                        <div class="detail-value">{{ sessionDetail.startedAt }}</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">消息数：</div>
+                        <div class="detail-value">{{ sessionDetail.messageCount }}</div>
+                    </div>
+                </div>
+                <div class="message-container"></div>
+            </div>
+        </el-dialog>
     </div>
 </template>
 <script setup>
@@ -46,9 +69,10 @@ const tableData = ref([])
 onMounted(()=>{
     handleSearch()
 })
-
-const viewSessionDetail = () => {
-    
+const sessionDetail = ref({})
+const viewSessionDetail = (row) => {
+    sessionDetail.value=row
+    showDetailDialog.value = true
 }
 const handleChange = (page) => {
     pagination.currentPage = page
