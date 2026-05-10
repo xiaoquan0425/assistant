@@ -2,12 +2,12 @@
     <div>
         <PageHead title="咨询记录" />
         <el-table :data="tableData"style="width:100%">
-            <el-table-column label="会话ID" width="200">
+            <el-table-column label="会话ID" width="100">
                 <template #default="scope">
-                    <el-avatar :src="scope.row.userNickname"></el-avatar>
+                    <el-avatar {{ scope.row.userNickname }}></el-avatar>
                 </template>
             </el-table-column>
-            <el-table-column label="情绪日志" width="200">
+            <el-table-column label="情绪日志">
                 <template #default="scope">
                     <div class="session-title">{{ scope.row.sessionTitle }}</div>
                     <div class="session-preview">{{scope.row.lastMessageContent}}</div>
@@ -23,10 +23,16 @@
                 </template>
             </el-table-column>
         </el-table>
+        <el-pagination 
+        style="margin-top: 25px"
+        :page-size="pagination.size"
+        layout="prev, pager, next" 
+        :total="pagination.total" 
+        @change="handleChange"></el-pagination>
     </div>
 </template>
 <script setup>
-import PageHead from '/components/PageHead.vue';
+import PageHead from '@/components/PageHead.vue';
 import {ref,onMounted,reactive} from 'vue'
 import { getConsultationPage } from '@/api/admin';
 
@@ -38,16 +44,24 @@ const pagination = reactive({
 
 const tableData = ref([])
 onMounted(()=>{
-    getConsultationPage(pagination).then(res=>{
-        const{records,total} = res.records
-        tableData.value =records
-        pagination.total = total
-    })
+    handleSearch()
 })
 
 const viewSessionDetail = () => {
     
 }
+const handleChange = (page) => {
+    pagination.currentPage = page
+   handleSearch()
+}
 
+const handleSearch = () => {
+    getConsultationPage(pagination).then(res=>{
+
+        const{records,total} = res
+        tableData.value =records
+        pagination.total = total
+    })
+}
 
 </script>
