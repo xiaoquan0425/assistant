@@ -46,6 +46,6 @@ export function getConsultationPage(params) {
     return service.get('/psychological-chat/sessions', { params })
 }
 
-export function getSessionDetail(id) {
+export function getSessionDetail(sessionId) {
     return service.get(`/psychological-chat/sessions/${sessionId}/messages`)
 }
