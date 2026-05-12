@@ -48,10 +48,28 @@
         width="800px"
         :close-on-click-modal="false"
         >
-        <div v-if="currentDetail.id">
-            <div class="detail-row">
-                <div class="detail-label">用户ID:</div>
-                <div class="detail-value">{{ currentDetail.userId }}</div>
+        <div v-if="currentDetail">
+            <div class="detail-section">
+                <h4>用户信息</h4>
+                <el-descriptions>
+                    <el-descriptions-item label="用户名">{{ currentDetail.username }}</el-descriptions-item>
+                    <el-descriptions-item label="昵称">{{ currentDetail.nickname }}</el-descriptions-item>
+                    <el-descriptions-item label="用户ID">{{ currentDetail.userId }}</el-descriptions-item>
+                    <el-descriptions-item label="记录日期">{{ currentDetail.diaryDate }}</el-descriptions-item>
+                </el-descriptions>
+            </div>
+            <div class="detail-section">
+                <h4>情绪状态</h4>
+                <el-descriptions>
+                    <el-descriptions-item label="情绪评分">
+                        <el-rate :model-value="currentDetail.moodScore" :max="10" disabled></el-rate>
+                    </el-descriptions-item>
+                    <el-descriptions-item label="主要情绪">
+                        <el-tag type="info">{{ currentDetail.nickname }}</el-tag>
+                    </el-descriptions-item>
+                    <el-descriptions-item label="用户ID">{{ currentDetail.userId }}</el-descriptions-item>
+                    <el-descriptions-item label="记录日期">{{ currentDetail.diaryDate }}</el-descriptions-item>
+                </el-descriptions>
             </div>
         </div>
         </el-dialog>
@@ -62,6 +80,61 @@ import { ref,onMounted,reactive } from 'vue'
 import PageHead from '@/components/PageHead.vue'
 import TableSearch from '@/components/TableSearch.vue'
 import {getEmotionalPage} from '@/api/admin.js'
+
+const getEmotionTagType = (emotion) => {
+  const emotionTypes = {
+    '快乐': 'success',
+    '平静': 'info',
+    '兴奋': 'warning',
+    '愤怒': 'danger',
+    '悲伤': 'info',
+    '焦虑': 'warning'
+  }
+  return emotionTypes[emotion] || 'info'
+}
+
+const getAiEmotionTagType = (emotion) => {
+  const emotionTagMap = {
+    '快乐': 'success',
+    '平静': 'success',
+    '兴奋': 'warning',
+    '满足': 'success',
+    '愤怒': 'danger',
+    '悲伤': 'info',
+    '焦虑': 'warning',
+    '恐惧': 'danger',
+    '沮丧': 'info',
+    '压力': 'warning'
+  }
+  return emotionTagMap[emotion] || 'info'
+}
+
+const getEmotionScoreColor = (score) => {
+  if (score >= 80) return '#f56c6c'
+  if (score >= 60) return '#e6a23c'
+  if (score >= 40) return '#909399'
+  return '#67c23a'
+}
+
+const getRiskLevelTagType = (riskLevel) => {
+  const riskTagMap = {
+    0: 'success',
+    1: 'info',
+    2: 'warning',
+    3: 'danger'
+  }
+  return riskTagMap[riskLevel] || 'info'
+}
+
+const getRiskLevelText = (riskLevel) => {
+  const riskTextMap = {
+    0: '正常',
+    1: '关注',
+    2: '预警',
+    3: '危机'
+  }
+  return riskTextMap[riskLevel] || '未知风险等级'
+}
 
 const formItem = [
     {name: 'input', prop: 'userId', label: '用户ID', placeholder: '请输入用户ID'},
@@ -100,7 +173,7 @@ const handleChange = (page) => {
     pagination.currentPage = page
     handleSearch()
 }
-const currentDetail = ref({})
+const currentDetail = ref(null)
 const detailDialogVisible = ref(false)
 const viewSessionDetail = (row) => {
     currentDetail.value = row
