@@ -48,7 +48,12 @@
         width="800px"
         :close-on-click-modal="false"
         >
-
+        <div v-if="currentDetail.id">
+            <div class="detail-row">
+                <div class="detail-label">用户ID:</div>
+                <div class="detail-value">{{ currentDetail.userId }}</div>
+            </div>
+        </div>
         </el-dialog>
     </div>
 </template>
@@ -95,10 +100,11 @@ const handleChange = (page) => {
     pagination.currentPage = page
     handleSearch()
 }
-
+const currentDetail = ref({})
 const detailDialogVisible = ref(false)
 const viewSessionDetail = (row) => {
-    
+    currentDetail.value = row
+    detailDialogVisible.value = true
 }
 
 onMounted(()=>{
