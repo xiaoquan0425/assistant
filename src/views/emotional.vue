@@ -3,14 +3,14 @@
         <PageHead title="情绪日志" />
         <TableSearch :formItem="formItem" @search="handleSearch" />
         <el-table :data="tableData" style="width:100%">
-            <el-table-column prop="userId" label="用户ID" width="80" />
-            <el-table-column label="会话ID" width="200" >
+            <el-table-column prop="id" label="用户ID" width="80" />
+            <el-table-column label="会话ID" width="80" >
                 <template #default="scope">
                     <el-avatar>{{ scope.row.nickname }}</el-avatar>
                 </template>
                </el-table-column>
             <el-table-column prop="diaryDate" label="记录日期" width="120" />
-            <el-table-column label="情绪评分" width="200" >
+            <el-table-column label="情绪评分" >
                 <template #default="scope">
                     <el-rate :model-value="scope.row.moodScore" :max="10" disabled></el-rate>
                 </template>
@@ -27,7 +27,21 @@
                     </div>
                 </template>
                </el-table-column>
+            <el-table-column prop="emotionTriggers" label="情绪触发因素" width="120" />
+            <el-table-column prop="diaryContent" label="日记内容" width="200" />
+             <el-table-column  label="操作" width="200" fixed="right">
+                <template #default="scope">
+                    <el-button text type ="primary">详情</el-button>
+                    <el-button text type ="danger">删除</el-button>
+                </template>
+            </el-table-column>
         </el-table>
+        <el-pagination 
+        style="margin-top: 25px"
+        :page-size="pagination.size"
+        layout="prev, pager, next" 
+        :total="pagination.total" 
+        @change="handleChange"></el-pagination>
     </div>
 </template>
 <script setup>
@@ -69,6 +83,10 @@ const pagination = reactive({
     total:0
 })
 
+const handleChange = (page) => {
+    pagination.currentPage = page
+    handleSearch()
+}
 onMounted(()=>{
     handleSearch()
 })
