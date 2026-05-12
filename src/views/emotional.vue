@@ -28,10 +28,10 @@
                 </template>
                </el-table-column>
             <el-table-column prop="emotionTriggers" label="情绪触发因素" width="120" />
-            <el-table-column prop="diaryContent" label="日记内容" width="200" />
+            <el-table-column prop="diaryContent" label="日记内容" width="150" />
              <el-table-column  label="操作" width="200" fixed="right">
                 <template #default="scope">
-                    <el-button text type ="primary">详情</el-button>
+                    <el-button @click="viewSessionDetail(scope.row)"text type ="primary">详情</el-button>
                     <el-button text type ="danger">删除</el-button>
                 </template>
             </el-table-column>
@@ -42,6 +42,14 @@
         layout="prev, pager, next" 
         :total="pagination.total" 
         @change="handleChange"></el-pagination>
+        <el-dialog
+        v-model="detailDialogVisible"
+        title="情绪日志详情"
+        width="800px"
+        :close-on-click-modal="false"
+        >
+
+        </el-dialog>
     </div>
 </template>
 <script setup>
@@ -87,6 +95,12 @@ const handleChange = (page) => {
     pagination.currentPage = page
     handleSearch()
 }
+
+const detailDialogVisible = ref(false)
+const viewSessionDetail = (row) => {
+    
+}
+
 onMounted(()=>{
     handleSearch()
 })
