@@ -49,3 +49,6 @@ export function getConsultationPage(params) {
 export function getSessionDetail(sessionId) {
     return service.get(`/psychological-chat/sessions/${sessionId}/messages`)
 }
+export function getEmotionalPage(params) {
+    return service.get('/emotion-diary/admin/page', { params })
+}
