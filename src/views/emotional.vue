@@ -2,11 +2,31 @@
     <div>
         <PageHead title="情绪日志" />
         <TableSearch :formItem="formItem" @search="handleSearch" />
-        <el-table :data:="tableData" style="width:100%">
-            <el-table-column prop="userId" label="用户ID" width="100" />
-            <el-table-column prop="moodScore" label="情绪评分" width="100" />
-            <el-table-column prop="moodScreRange" label="情绪评分范围" width="100" />
-            <el-table-column prop="createdAt" label="创建时间" width="100" />
+        <el-table :data="tableData" style="width:100%">
+            <el-table-column prop="userId" label="用户ID" width="80" />
+            <el-table-column label="会话ID" width="200" >
+                <template #default="scope">
+                    <el-avatar>{{ scope.row.nickname }}</el-avatar>
+                </template>
+               </el-table-column>
+            <el-table-column prop="diaryDate" label="记录日期" width="120" />
+            <el-table-column label="情绪评分" width="200" >
+                <template #default="scope">
+                    <el-rate :model-value="scope.row.moodScore" :max="10" disabled></el-rate>
+                </template>
+               </el-table-column>
+            <el-table-column label="生活指标" width="120" >
+                <template #default="scope">
+                    <div>
+                        <p>
+                            睡眠：{{ scope.row.sleepQuality }}/5
+                        </p>
+                         <p>
+                            压力：{{ scope.row.stressLevel }}/5
+                        </p>
+                    </div>
+                </template>
+               </el-table-column>
         </el-table>
     </div>
 </template>
@@ -35,7 +55,7 @@ const handleSearch = async(formData) => {
         ...pagination,
         ...formData
     }
-
+    console.log(params)
     const {records, total} = await getEmotionalPage(params)
     tableData.value = records
     pagination.total = total
