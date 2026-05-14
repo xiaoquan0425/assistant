@@ -58,11 +58,26 @@
                 </el-card>
             </el-col>
         </el-row>
+            <el-row style="margin-top: 20px;" :gutter="20">
+                <el-col :span="12">
+                    <el-card style="width:100%">
+                        <template #header>
+                            <div class="card-header">
+                                情绪趋势分析
+                            </div>
+                        </template>
+                        <div class="chart-content">
+                            <div ref="emotionChartRef" style="width:100%;height: 300px"></div>
+                        </div>
+                    </el-card>
+                </el-col>
+        </el-row>
     </div>
 </template>
 <script setup>
 import { onMounted ,ref} from 'vue';
 import { getAnalyticsOverview } from '@/api/admin';
+import * as echarts from 'echarts';
 
 const iconUrl1 = new URL('@/assets/users.png', import.meta.url).href
 const iconUrl2 = new URL('@/assets/like.png', import.meta.url).href
@@ -70,10 +85,119 @@ const iconUrl3 = new URL('@/assets/comments.png', import.meta.url).href
 const iconUrl4 = new URL('@/assets/smile.png', import.meta.url).href
 
 const aiData = ref({})
+
+//情绪趋势
+let emotionChart = null
+const emotionChartRef = ref(null)
+
+const initCharts = () => {
+    initEmotionChart()
+}
+
+const initEmotionChart = () => {
+    if(!emotionChartRef.value) return
+    //数据变化时，销毁之前的图表
+    if (emotionChart) {
+        emotionChart.dispose()
+    }
+}
+    //创建Echarts实例
+    emotionChart = echarts.init(emotionChartRef.value)
+    //获取情绪趋势的数据
+    const TrendData = aiData.value.emotionTrend
+    //配置项
+    const option = {
+        title: {
+            text: '情绪趋势分析',
+            textStyle: {
+                color: '#2d3450',
+                fontSize: 16,
+                fontWeight:600
+            },
+            left: 'center',
+            top: 10
+        },
+        tooltip: {
+            trigger: 'axis',
+            borderColor: '#fab1a0',
+            borderWidth: 1,
+            textStyle: {
+                color: '#2d3436',
+            }
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            top: 30
+        },
+        legend: {
+            data: ['平均情绪评分', '记录数量'],
+            top: 40
+        },
+        xAxis: {
+            type: 'category',
+            data: TrendData.map(item => item.date),
+            axisLine:{
+                lineStyle:{
+                    color:'#2d3436'
+                }
+            }
+        },
+        yAxis: [{
+            type: 'value',
+            name: '情绪评分',
+            position: 'left',
+            axisLine:{
+                lineStyle:{
+                    color:'#2d3436'
+                }
+             }
+           },{
+            type: 'value',
+            name: '记录数量',
+            position: 'right',
+            axisLine:{
+                lineStyle:{
+                    color:'#2d3436'
+                }
+            }  
+            }
+        ],
+        series:[{
+            name: '平均情绪评分',
+            type:'line',
+            data: TrendData.map(item => item.avgMoodScore),
+            smooth: true,
+            LineStyle:{
+                width:3,
+                color:'#fae1a0'
+            },
+            itemStyle:{
+                color:'#fae1a0'
+            }
+        },{
+            name: '记录数量',
+            type:'line',
+            data: TrendData.map(item => item.recordCount),
+            smooth: true,
+            LineStyle:{
+                width:3,
+                color:'#eeb5a3'
+            },
+            itemStyle:{
+                color:'#eeb5a3'
+            }
+        }]
+   
+    }
+ emotionChart.setOption(option)
+
 onMounted(() => {
     getAnalyticsOverview().then((res) => {
     console.log(res)
     aiData.value = res
+    initCharts()
     })
 })
 
@@ -111,7 +235,7 @@ onMounted(() => {
           color: #7f8c8d;
           margin-bottom: 4px;
         }
-        .value {
+        .number {
           font-size: 24px;
           font-weight: 700;
           color: #2c3e50;
