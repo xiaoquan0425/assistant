@@ -59,7 +59,6 @@
             </el-col>
         </el-row>
         
-        <!-- 修改：将条件判断移到外层，确保图表容器始终渲染 -->
         <el-row style="margin-top: 20px;" :gutter="20">
             <el-col :span="12">
                 <el-card style="width:100%">
@@ -69,19 +68,50 @@
                         </div>
                     </template>
                     <div class="chart-content">
-                        <!-- 这里不添加条件判断，确保图表容器始终存在 -->
                         <div ref="emotionChartRef" style="width:100%;height: 300px"></div>
-                        <!-- 如果没有数据，显示提示 -->
-                        <div v-if="!aiData.emotionTrend || aiData.emotionTrend.length === 0" 
-                             style="text-align: center; padding: 50px; color: #999;">
-                            <el-icon :size="40">
-                                <DataLine />
-                            </el-icon>
-                            <p style="margin-top: 10px;">暂无数据</p>
-                        </div>
                     </div>
                 </el-card>
             </el-col>
+            <el-col :span="12">
+                <el-card style="width:100%">
+                    <template #header>
+                        <div class="card-header">
+                            咨询会话统计
+                        </div>
+                    </template>
+                    <div class="chart-content">
+                        <div v-if="aiData.consultationStats" class="consultation-stats-container">
+                            <div class="consultation-stats-row">
+                                <div class="stat-item">
+                                    <div class="stat-label">总会话数</div>
+                                    <div class="stat-value">{{ aiData.consultationStats.totalSessions }}</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-label">平均时长(分钟)</div>
+                                    <div class="stat-value">{{ aiData.consultationStats.avgDurationMinutes }}</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-label">活跃用户</div>
+                                    <div class="stat-value">{{ aiData.consultationStats.activeUsers }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div ref="consultationChartRef" style="width:100%;height: 260px"></div>
+                    </div>
+                </el-card>
+            </el-col>
+        </el-row>
+        <el-row style="margin-top: 20px;">
+            <el-card style="width:100%">
+                    <template #header>
+                        <div class="card-header">
+                            用户活跃度趋势
+                        </div>
+                    </template>
+                    <div class="chart-content">
+                        <div ref="userActivityChartRef" style="width:100%;height: 300px"></div>
+                    </div>
+                </el-card>
         </el-row>
     </div>
 </template>
@@ -90,7 +120,6 @@
 import { onMounted, ref, onUnmounted, nextTick, watch } from 'vue';
 import { getAnalyticsOverview } from '@/api/admin';
 import * as echarts from 'echarts';
-import { DataLine } from '@element-plus/icons-vue';
 
 const iconUrl1 = new URL('@/assets/users.png', import.meta.url).href
 const iconUrl2 = new URL('@/assets/like.png', import.meta.url).href
@@ -103,8 +132,13 @@ const loading = ref(false)
 // 情绪趋势
 let emotionChart = null
 const emotionChartRef = ref(null)
-
-// 修改：监听aiData的变化
+// 咨询会话统计
+let consultationChart = null
+const consultationChartRef = ref(null)
+//用户活跃度
+let userActivityChart = null
+const userActivityChartRef = ref(null)
+// 监听emotionTrend的变化
 watch(() => aiData.value.emotionTrend, (newVal) => {
     if (newVal && newVal.length > 0) {
         // 等待DOM更新
@@ -120,11 +154,25 @@ watch(() => aiData.value.emotionTrend, (newVal) => {
     }
 }, { deep: true, immediate: true })
 
+// 监听consultationStats的变化
+watch(() => aiData.value.consultationStats, (newVal) => {
+    if (newVal && newVal.dailyTrend && newVal.dailyTrend.length > 0) {
+        // 等待DOM更新
+        nextTick(() => {
+            initConsultationChart()
+        })
+    } else {
+        // 如果没有数据，销毁图表
+        if (consultationChart) {
+            consultationChart.dispose()
+            consultationChart = null
+        }
+    }
+}, { deep: true, immediate: true })
+
 const initEmotionChart = () => {
-    console.log('初始化图表，容器：', emotionChartRef.value)
-    
     if (!emotionChartRef.value) {
-        console.error('图表容器未找到')
+        console.error('情绪图表容器未找到')
         return
     }
     
@@ -141,8 +189,6 @@ const initEmotionChart = () => {
         console.warn('没有情绪趋势数据')
         return
     }
-    
-    console.log('图表数据:', trendData)
     
     // 创建Echarts实例
     emotionChart = echarts.init(emotionChartRef.value)
@@ -236,15 +282,317 @@ const initEmotionChart = () => {
     }
     
     emotionChart.setOption(option)
-    
-    // 监听窗口大小变化
-    window.addEventListener('resize', handleResize)
 }
 
+const initConsultationChart = () => {
+    if (!consultationChartRef.value) {
+        console.error('咨询图表容器未找到')
+        return
+    }
+    
+    // 数据变化时，销毁之前的图表
+    if (consultationChart) {
+        consultationChart.dispose()
+        consultationChart = null
+    }
+
+    // 获取咨询会话统计数据
+    const consultationData = aiData.value.consultationStats || {}
+
+    if (!consultationData.dailyTrend || consultationData.dailyTrend.length === 0) {
+        console.warn('没有咨询会话统计数据')
+        return
+    }
+    
+    // 创建Echarts实例
+    consultationChart = echarts.init(consultationChartRef.value)
+    
+    // 获取数据
+    const dailyTrend = consultationData.dailyTrend || []
+    
+    // 配置项
+    const option = {
+        title: {
+            text: '咨询活动统计',
+            textStyle: {
+                fontSize: 16,
+                fontWeight: 600,
+                color: '#2d3436'
+            },
+            left: 'center',
+            top: 10
+        },
+        tooltip: {
+            trigger: 'axis',
+            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+            borderColor: '#fab1a0',
+            borderWidth: 1,
+            textStyle: {
+                color: '#2d3436'
+            }
+        },
+        legend: {
+            data: ['会话数量', '参与用户数'],
+            top: 40,
+            textStyle: {
+                color: '#636e72'
+            }
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            top: 80,
+            containLabel: true
+        },
+        xAxis: {
+            type: 'category',
+            data: dailyTrend.map(item => item.date),
+            axisLine: {
+                lineStyle: {
+                    color: 'rgba(244, 162, 97, 0.3)'
+                }
+            },
+            axisLabel: {
+                color: '#636e72'
+            }
+        },
+        yAxis: {
+            type: 'value',
+            axisLabel: {
+                color: '#636e72'
+            },
+            axisLine: {
+                lineStyle: {
+                    color: 'rgba(244, 162, 97, 0.3)'
+                }
+            },
+            splitLine: {
+                lineStyle: {
+                    color: 'rgba(244, 162, 97, 0.1)'
+                }
+            }
+        },
+        series: [
+            {
+                name: '会话数量',
+                type: 'bar',
+                data: dailyTrend.map(item => item.sessionCount),
+                itemStyle: {
+                    color: {
+                        type: 'linear',
+                        x: 0,
+                        y: 0,
+                        x2: 0,
+                        y2: 1,
+                        colorStops: [
+                            { offset: 0, color: '#74b9ff' },
+                            { offset: 1, color: '#0984e3' }
+                        ]
+                    }
+                },
+                barWidth: '40%'
+            },
+            {
+                name: '参与用户数',
+                type: 'bar',
+                data: dailyTrend.map(item => item.userCount),
+                itemStyle: {
+                    color: {
+                        type: 'linear',
+                        x: 0,
+                        y: 0,
+                        x2: 0,
+                        y2: 1,
+                        colorStops: [
+                            { offset: 0, color: '#fdcb6e' },
+                            { offset: 1, color: '#f39c12' }
+                        ]
+                    }
+                },
+                barWidth: '40%'
+            }
+        ]
+    }
+    
+    consultationChart.setOption(option)
+}
+const inituserActivityChart = () => {
+    if (!userActivityChartRef.value) {
+        console.error('容器未找到')
+        return
+    }
+    
+    // 数据变化时，销毁之前的图表
+    if (userActivityChart) {
+        userActivityChart.dispose()
+        userActivityChart = null
+    }
+
+    // 获取用户活跃度统计数据
+    userActivityChart = echarts.init(userActivityChartRef.value)
+
+    // 获取数据
+    const activityData = aiData.value.userActivity 
+
+    // 配置项
+    const option = {
+  title: {
+    text: '用户活跃度趋势',
+    textStyle: {
+      fontSize: 16,
+      fontWeight: 600,
+      color: '#2d3436'
+    },
+    left: 'center',
+    top: 10
+  },
+  tooltip: {
+    trigger: 'axis',
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    borderColor: '#fab1a0',
+    borderWidth: 1,
+    textStyle: {
+      color: '#2d3436'
+    }
+  },
+  legend: {
+    data: ['活跃用户', '新增用户', '日记用户', '咨询用户'],
+    top: 40,
+    textStyle: {
+      color: '#636e72'
+    }
+  },
+  grid: {
+    left: '3%',
+    right: '4%',
+    bottom: '3%',
+    top: 80,
+    containLabel: true
+  },
+  xAxis: {
+    type: 'category',
+    data: activityData.map(item => item.date),
+    axisLine: {
+      lineStyle: {
+        color: 'rgba(244, 162, 97, 0.3)'
+      }
+    },
+    axisLabel: {
+      color: '#636e72'
+    }
+  },
+  yAxis: {
+    type: 'value',
+    axisLabel: {
+      color: '#636e72'
+    },
+    axisLine: {
+      lineStyle: {
+        color: 'rgba(244, 162, 97, 0.3)'
+      }
+    },
+    splitLine: {
+      lineStyle: {
+        color: 'rgba(244, 162, 97, 0.1)'
+      }
+    }
+  },
+  series: [
+    {
+      name: '活跃用户',
+      type: 'line',
+      data: activityData.map(item => item.activeUsers),
+      smooth: true,
+      lineStyle: {
+        width: 3,
+        color: '#a29bfe'
+      },
+      itemStyle: {
+        color: '#a29bfe'
+      },
+      areaStyle: {
+        color: {
+          type: 'linear',
+          x: 0,
+          y: 0,
+          x2: 0,
+          y2: 1,
+          colorStops: [
+            { offset: 0, color: 'rgba(162, 155, 254, 0.4)' },
+            { offset: 1, color: 'rgba(162, 155, 254, 0.1)' }
+          ]
+        }
+      }
+    },
+    {
+      name: '新增用户',
+      type: 'line',
+      data: activityData.map(item => item.newUsers),
+      smooth: true,
+      lineStyle: {
+        width: 3,
+        color: '#fdcb6e'
+      },
+      itemStyle: {
+        color: '#fdcb6e'
+      }
+    },
+    {
+      name: '日记用户',
+      type: 'line',
+      data: activityData.map(item => item.diaryUsers),
+      smooth: true,
+      lineStyle: {
+        width: 3,
+        color: '#00b894'
+      },
+      itemStyle: {
+        color: '#00b894'
+      }
+    },
+    {
+      name: '咨询用户',
+      type: 'line',
+      data: activityData.map(item => item.consultationUsers),
+      smooth: true,
+      lineStyle: {
+        width: 3,
+        color: '#fab1a0'
+      },
+      itemStyle: {
+        color: '#fab1a0'
+      }
+    }
+  ]
+}
+ 
+userActivityChart.setOption(option)
+}
+watch(() => aiData.value.userActivity, (newVal) => {
+    if (newVal && newVal.length > 0) {
+        // 等待DOM更新
+        nextTick(() => {
+            inituserActivityChart()
+        })
+    } else {
+        // 如果没有数据，销毁图表
+        if (userActivityChart) {
+            userActivityChart.dispose()
+            userActivityChart = null
+        }
+    }
+}, { deep: true, immediate: true })
 // 窗口大小变化时重绘图表
 const handleResize = () => {
     if (emotionChart) {
         emotionChart.resize()
+    }
+    if (consultationChart) {
+        consultationChart.resize()
+    }
+    if (userActivityChart) {  // 新增
+        userActivityChart.resize()
     }
 }
 
@@ -258,7 +606,9 @@ onMounted(async () => {
         
         aiData.value = res
         
-        // 这里不再调用initCharts，由watch自动监听数据变化
+        // 添加窗口resize监听
+        window.addEventListener('resize', handleResize)
+        
     } catch (error) {
         console.error('获取数据失败:', error)
     } finally {
@@ -271,6 +621,28 @@ onUnmounted(() => {
     if (emotionChart) {
         emotionChart.dispose()
         emotionChart = null
+    }
+    if (consultationChart) {
+        consultationChart.dispose()
+        consultationChart = null
+    }
+    // 移除事件监听
+    window.removeEventListener('resize', handleResize)
+})
+
+onUnmounted(() => {
+    // 清理图表实例
+    if (emotionChart) {
+        emotionChart.dispose()
+        emotionChart = null
+    }
+    if (consultationChart) {
+        consultationChart.dispose()
+        consultationChart = null
+    }
+    if (userActivityChart) {  // 新增
+        userActivityChart.dispose()
+        userActivityChart = null
     }
     // 移除事件监听
     window.removeEventListener('resize', handleResize)
@@ -331,12 +703,40 @@ onUnmounted(() => {
     }
     
     .chart-content {
-        height: 300px;
+        height: 360px;
         position: relative;
         
         canvas {
             width: 100% !important;
             height: 100% !important;
+        }
+    }
+    
+    .consultation-stats-container {
+        padding: 10px 0;
+        
+        .consultation-stats-row {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            
+            .stat-item {
+                text-align: center;
+                flex: 1;
+                padding: 0 10px;
+                
+                .stat-label {
+                    font-size: 12px;
+                    color: #7f8c8d;
+                    margin-bottom: 4px;
+                }
+                
+                .stat-value {
+                    font-size: 18px;
+                    font-weight: 600;
+                    color: #2c3e50;
+                }
+            }
         }
     }
 }
