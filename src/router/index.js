@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import backendlayout from '@/components/backendlayout.vue'
-import Authlayout from '../components/Authlayout.vue'
+import Authlayout from '@/components/Authlayout.vue'
+import FrontedLayout from '@/components/FrontedLayout.vue'
 const backendRoutes = [
     {
         path: '/back',
@@ -62,9 +63,18 @@ const backendRoutes = [
         ]
     }
 ]
+const frontedRoutes = [
+    {
+        path: '/',
+        component: FrontedLayout,
+        children: [
+
+        ]
+    }
+]
 const router = createRouter({
     history: createWebHistory(),
-    routes: backendRoutes
+    routes: [...backendRoutes, ...frontedRoutes]
 })
 //路由前置守卫
 router.beforeEach((to, from, next) => {
