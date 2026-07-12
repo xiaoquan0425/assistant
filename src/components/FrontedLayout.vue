@@ -33,7 +33,8 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { logout } from '@/api/admin';
-
+import { useRouter} from 'vue-router';
+const router = useRouter();
 const iconURL = new URL('@/assets/robot.png', import.meta.url).href;
 const isLoggedIn = ref(false);
 const handleLogout = ()=>{
