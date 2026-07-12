@@ -67,7 +67,19 @@ const frontedRoutes = [
     {
         path: '/',
         component: FrontedLayout,
-        children: [
+        children: [{
+            path: '',
+            component: () => import('@/views/home.vue'),
+        }, {
+            path: 'consultation',
+            component: () => import('@/views/consultation.vue'),
+        }, {
+            path: 'emotion-diary',
+            component: () => import('@/views/emotionDiary.vue'),
+        }, {
+            path: 'knowledge',
+            component: () => import('@/views/frontedknowledge.vue'),
+        }
 
         ]
     }
@@ -89,7 +101,12 @@ router.beforeEach((to, from, next) => {
                 next('/back/dashboard')
             }
         } else if (userInfo.userType === 1) {
-
+            //用户端只能访问前台路由
+            if (to.path.startsWith('/back') || to.path.startsWith('/auth')) {
+                next('/')
+            } else {
+                next();
+            }
         }
     } else {
         if (to.path.startsWith('/back')) {

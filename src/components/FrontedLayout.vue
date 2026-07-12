@@ -32,19 +32,26 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
+import { logout } from '@/api/admin';
 
 const iconURL = new URL('@/assets/robot.png', import.meta.url).href;
 const isLoggedIn = ref(false);
+const handleLogout = ()=>{
+    logout().then(()=>{
+        //清除缓存
+        localStorage.removeItem('token')
+        localStorage.removeItem('userInfo')
+        //跳转登录页面
+        router.push('/auth/login')
+    }
+)
+}
 
 onMounted(() => {
     isLoggedIn.value = localStorage.getItem('token') !== null;
 });
 
-const handleLogout = () => {
-    localStorage.removeItem('token');
-    isLoggedIn.value = false;
-    // 可以在这里添加路由跳转到首页
-};
+
 </script>
 
 <style scoped lang="scss">
