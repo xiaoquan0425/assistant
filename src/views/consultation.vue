@@ -68,13 +68,12 @@
 
 <script setup>
 import { Promotion } from '@element-plus/icons-vue'
-import {ref} from 'vue'
+import { ref, onMounted } from 'vue'
+import { ElMessage } from 'element-plus'
 const iconUrl = new URL('@/assets/robot-fill.png', import.meta.url).href
 const iconUrl1 = new URL('@/assets/like.png', import.meta.url).href
 
-const createNewFrontendSession = () => {
-    
-}
+
 //定义对话消息
 const messages = ref([])
 //定义用户输入的消息
@@ -85,9 +84,35 @@ const isAITying = ref(false)
 const handleKeyDown = (e) => {
     if(e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault()
-
-    
+    }
 }
+
+//用户发送消息
+const sendMessage = () => {
+    if(!userMessage.value.trim()) return
+    if(isAITying.value){
+        ElMessage.error('AI助手正在思考中，请稍等')
+    }    
+}
+
+onMounted(() => {
+    //初始化时创建一个新对话
+    createNewFrontendSession()
+})
+
+
+//定义一个当前会话对象
+const currentSession = ref(null)
+
+//新建对话
+const createNewFrontendSession = () => {
+    //创建一个新的对话对象
+    const newSession = {
+        sessionId:'temp_${Date.now()}', //使用时间戳作为会话ID
+        status: 'TEMP', //会话状态
+        sessionTitle: '新对话'
+    }
+    currentSession.value = newSession
 }
 
 </script>
