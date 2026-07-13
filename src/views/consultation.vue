@@ -1,11 +1,37 @@
 <template>
     <div class="consultation-container">
-        <div class="consultation-header">
-            <div class="sidebar"></div>
-            <div class="chat-main"></div>
+        <div class="sidebar">
+            <div class="ai-assistant-info">
+                <div class="breathing-circle">
+                    <el-image :src="iconUrl" style="width: 25px;height: 25px" alt="AI助手"></el-image>
+                </div>
+                <div class="assistant-name">AI助手</div>
+                <div class="online-status">
+                    <div class="status-dot"></div>
+                        在线服务中
+                </div>
+            </div>
+        </div>
+        <div class="chat-main">
+            <div class="chat-header">
+                <div class="header-left">
+                    <div class="chat-avatar">
+                        <el-image :src="iconUrl1" style="width: 40px;height: 40px" alt="AI助手"></el-image>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
+
+<script setup>
+const iconUrl = new URL('@/assets/robot-fill.png', import.meta.url).href
+
+const iconUrl1 = new URL('@/assets/like.png', import.meta.url).href
+
+</script>
+
+
 <style scoped lang="scss">
 .consultation-container {
     margin: 0 auto;
