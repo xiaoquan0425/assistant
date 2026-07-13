@@ -16,7 +16,11 @@
             <div class="chat-header">
                 <div class="header-left">
                     <div class="chat-avatar">
-                        <el-image :src="iconUrl1" style="width: 40px;height: 40px" alt="AI助手"></el-image>
+                        <el-image :src="iconUrl1" style="width: 30px;height: 30px"></el-image>
+                    </div>
+                    <div class="chat-info">
+                        <h2>AI助手</h2>
+                        <p>您的AI心理助手</p>
                     </div>
                 </div>
             </div>
