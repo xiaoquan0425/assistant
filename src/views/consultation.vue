@@ -70,6 +70,7 @@
 import { Promotion } from '@element-plus/icons-vue'
 import { ref, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
+import { startSession } from '../api/frontend'
 const iconUrl = new URL('@/assets/robot-fill.png', import.meta.url).href
 const iconUrl1 = new URL('@/assets/like.png', import.meta.url).href
 
@@ -99,6 +100,8 @@ const sendMessage = () => {
     userMessage.value = ''
     //如果没有会话成员或者是临时会话，则创建一个新会话
     if(currentSession.value.status === 'TEMP') {
+        startNewSession(message)
+}
 }
 
 const startNewSession = () => {
@@ -106,8 +109,28 @@ const startNewSession = () => {
     const sessionParams = {
         initialMessage: message
     }
-    if(currentSession.value.title) {
+    if(currentSession.value.title === '新对话') {
+        sessionParams.sessionTitle = 'AI助手 - ${new Date().toLocaleString()}'
+}else {//如果是历史会话记录
+    sessionParams.sessionTitle = currentSession.value.sessionTitle
 }
+    //调用后端接口创建新会话
+    startSession(sessionParams).then(res=> {
+    //将后端返回的数据转为前端会话格式
+    const sessionData = {
+        sessionId: res.sessionId,
+        status: res.status,
+        sessionTitle: sessionParams.sessionTitle
+    }
+    //如果当前是临时会话，更新数据
+    if(currentSession.value && currentSession.value.status === 'TEMP'){
+        //更新为正式会话
+        Object.assign(currentSession.value, sessionData)
+    }else{
+        //否则，创建一个新的会话
+        currentSession.value = sessionData
+    }
+})
 }
 onMounted(() => {
     //初始化时创建一个新对话
