@@ -92,9 +92,23 @@ const sendMessage = () => {
     if(!userMessage.value.trim()) return
     if(isAITying.value){
         ElMessage.error('AI助手正在思考中，请稍等')
-    }    
+        return
+    }
+    
+    const message = userMessage.value.trim()
+    userMessage.value = ''
+    //如果没有会话成员或者是临时会话，则创建一个新会话
+    if(currentSession.value.status === 'TEMP') {
 }
 
+const startNewSession = () => {
+    //构建会话参数
+    const sessionParams = {
+        initialMessage: message
+    }
+    if(currentSession.value.title) {
+}
+}
 onMounted(() => {
     //初始化时创建一个新对话
     createNewFrontendSession()
