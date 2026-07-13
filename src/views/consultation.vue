@@ -42,11 +42,32 @@
                    </div>
                 </div>
             </div>
+            <div class="chat-input">
+                <div class="input-container">
+                    <el-input
+                    v-model="userMessage"
+                    placeholder="请输入您今天想要分享的内容..."
+                    clearable
+                    type="textarea"
+                    :rows="3"
+                    :disabled="isAITying"
+                    @keydown="handleKeyDown"
+                    class="message-input"
+
+                    ></el-input>
+                </div>
+                <el-button type="primary" class="send-btn" @click="sendMessage">
+                    <el-icon>
+                        <Promotion></Promotion>
+                    </el-icon>
+                </el-button>
+            </div>
         </div>
     </div>
 </template>
 
 <script setup>
+import { Promotion } from '@element-plus/icons-vue'
 import {ref} from 'vue'
 const iconUrl = new URL('@/assets/robot-fill.png', import.meta.url).href
 const iconUrl1 = new URL('@/assets/like.png', import.meta.url).href
@@ -56,6 +77,19 @@ const createNewFrontendSession = () => {
 }
 //定义对话消息
 const messages = ref([])
+//定义用户输入的消息
+const userMessage = ref('')
+//定义AI是否正在回复
+const isAITying = ref(false)
+//定义处理键盘事件
+const handleKeyDown = (e) => {
+    if(e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault()
+
+    
+}
+}
+
 </script>
 
 
