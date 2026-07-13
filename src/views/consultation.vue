@@ -23,16 +23,33 @@
                         <p>您的AI心理助手</p>
                     </div>
                 </div>
+                <el-button circle @click="createNewFrontendSession" title="新建会话">
+                    <el-icon>
+                      <Plus></Plus>
+                    </el-icon>
+                </el-button>
+            </div>
+            <div class="chat-messages">
+                <div class="message-item ai-message" v-if="messages.length === 0">
+                   <div class="message-avatar">
+                    <el-image :src="iconUrl" style="width: 18px;height: 18px"></el-image>
+                   </div> 
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
+import {ref} from 'vue'
 const iconUrl = new URL('@/assets/robot-fill.png', import.meta.url).href
-
 const iconUrl1 = new URL('@/assets/like.png', import.meta.url).href
 
+const createNewFrontendSession = () => {
+    
+}
+//定义对话消息
+const messages = ref([])
 </script>
 
 
