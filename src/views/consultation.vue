@@ -33,7 +33,13 @@
                 <div class="message-item ai-message" v-if="messages.length === 0">
                    <div class="message-avatar">
                     <el-image :src="iconUrl" style="width: 18px;height: 18px"></el-image>
-                   </div> 
+                   </div>
+                   <div class="message-content">
+                    <div class="message-bubble">
+                        <p>您好，我是小暖，您的AI心理助手，很高兴陪伴您，今天感觉怎么样？有什么要分享的吗？</p>
+                    </div>
+                    <div class="message-time">刚刚</div>
+                   </div>
                 </div>
             </div>
         </div>
