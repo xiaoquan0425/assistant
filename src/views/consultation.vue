@@ -88,6 +88,17 @@
                         <el-image v-if="msg.senderType === 1" style="width: 18px;height: 18px;" :src="iconUrl2"></el-image>
                         <el-image v-if="msg.senderType === 2" style="width: 18px;height: 18px;" :src="iconUrl2"></el-image>
                     </div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            <!-- AI思考中显示 -->
+                            <div v-if="msg.senderType === 2 && isAITying && msg.content" class="typing-indicator">
+                                <div class="typing-dot"></div>
+                                <div class="typing-dot"></div>
+                                <div class="typing-dot"></div>
+                            </div>
+                        </div>
+                        <div class="message-time">{{ msg.senderType === 2 && isAITying ?'正在输入中...' : msg.createdAt}}</div>
+                    </div>
                  </div>
             </div>
             <div class="chat-input">
