@@ -68,7 +68,9 @@
                     </el-icon>
                 </el-button>
             </div>
+            <!-- 聊天块 -->
             <div class="chat-messages">
+                <!-- 欢迎用语 -->
                 <div class="message-item ai-message" v-if="messages.length === 0">
                    <div class="message-avatar">
                     <el-image :src="iconUrl" style="width: 18px;height: 18px"></el-image>
@@ -80,6 +82,13 @@
                     <div class="message-time">刚刚</div>
                    </div>
                 </div>
+                <!-- 消息列表 -->
+                 <div v-for="msg in message" :key="msg.id" class="message-item" :class="msg.senderType === 1 ? 'user-messages' : 'ai-message'">
+                    <div class="message-avatar">
+                        <el-image v-if="msg.senderType === 1" style="width: 18px;height: 18px;" :src="iconUrl2"></el-image>
+                        <el-image v-if="msg.senderType === 2" style="width: 18px;height: 18px;" :src="iconUrl2"></el-image>
+                    </div>
+                 </div>
             </div>
             <div class="chat-input">
                 <div class="input-container">
@@ -109,9 +118,10 @@
 import { ChatRound, Clock, DeleteFilled, Promotion } from '@element-plus/icons-vue'
 import { ref, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
-import { startSession,getSessionList,deleteSession} from '@/api/frontend'
+import { startSession,getSessionList,deleteSession,getSessionDetail} from '@/api/frontend'
 const iconUrl = new URL('@/assets/robot-fill.png', import.meta.url).href
 const iconUrl1 = new URL('@/assets/like.png', import.meta.url).href
+const iconUrl2 = new URL('@/assets/users.png', import.meta.url).href
 
 import axios from 'axios'
 
@@ -164,7 +174,6 @@ const startNewSession = (message) => {
 }
     //调用后端接口创建新会话
     startSession(sessionParams).then(res=> {
-        console.log(res)
     //将后端返回的数据转为前端会话格式
     const sessionData = {
         sessionId: res.sessionId,
@@ -192,10 +201,11 @@ onMounted(() => {
 })
 //获取会话数据
 const handleSessionClick = (session) => {
-        // 设置当前会话
-    currentSession.value = session
-    // 这里可以添加加载会话消息的逻辑
-    messages.value = []
+    console.log(session,'session')
+    getSessionDetail(session.id).then(res => {
+        console.log(res)
+        messages.value = res
+    })
 }
 
 
