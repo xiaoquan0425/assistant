@@ -17,14 +17,14 @@
                     <div v-for="session in sessionList" :key="session.id" @click="handleSessionClick(session)" class="session-item">
                         <div class="session-info">
                             <div class="session-title">
-                                <span>{{ sessionTitle }}</span>
+                                <span>{{ session.sessionTitle }}</span>
                                 <div class="session-meta">
                                     <span class="session-time">{{ session.startedAt }}</span>
                                 </div>
                                 <div class="session-preview">
                                     {{ session.lastMessageContent }}
                                 </div>
-                                <div class="session-status">
+                                <div class="session-stats">
                                     <span>
                                         <el-icon>
                                             <ChatRound />
@@ -38,6 +38,13 @@
                                         {{ session.durationMinutes || 0 }}
                                     </span>
                                 </div>
+                            </div>
+                            <div class="session-actions">
+                                <el-button text type="danger" size="mini" @click="handleDeleteSession(session.id)">
+                                    <el-icon>
+                                        <DeleteFilled />
+                                    </el-icon>
+                                </el-button>
                             </div>
                         </div>
                     </div>
@@ -99,10 +106,10 @@
 </template>
 
 <script setup>
-import { ChatRound, Clock, Promotion } from '@element-plus/icons-vue'
+import { ChatRound, Clock, DeleteFilled, Promotion } from '@element-plus/icons-vue'
 import { ref, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
-import { startSession,getSessionList } from '../api/frontend'
+import { startSession,getSessionList,deleteSession} from '@/api/frontend'
 const iconUrl = new URL('@/assets/robot-fill.png', import.meta.url).href
 const iconUrl1 = new URL('@/assets/like.png', import.meta.url).href
 
@@ -213,6 +220,12 @@ const getSessionPage = () => {
     })
 }
 
+const handleDeleteSession = (sessionId) => {
+    deleteSession(sessionId).then(res => {
+        ElMessage.success('删除成功')
+        getSessionPage()
+    })
+}
 </script>
 
 
