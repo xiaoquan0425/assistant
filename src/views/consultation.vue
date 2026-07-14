@@ -11,6 +11,38 @@
                         在线服务中
                 </div>
             </div>
+            <div class="session-history">
+                <h4 class="secion-title">会话列表</h4>
+                <div class="session-list">
+                    <div v-for="session in sessionList" :key="session.id" @click="handleSessionClick(session)" class="session-item">
+                        <div class="session-info">
+                            <div class="session-title">
+                                <span>{{ sessionTitle }}</span>
+                                <div class="session-meta">
+                                    <span class="session-time">{{ session.startedAt }}</span>
+                                </div>
+                                <div class="session-preview">
+                                    {{ session.lastMessageContent }}
+                                </div>
+                                <div class="session-status">
+                                    <span>
+                                        <el-icon>
+                                            <ChatRound />
+                                        </el-icon>
+                                        {{ session.messageCount || 0 }}
+                                    </span>
+                                        <span>
+                                        <el-icon>
+                                            <Clock />
+                                        </el-icon>
+                                        {{ session.durationMinutes || 0 }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="chat-main">
             <div class="chat-header">
@@ -67,14 +99,23 @@
 </template>
 
 <script setup>
-import { Promotion } from '@element-plus/icons-vue'
+import { ChatRound, Clock, Promotion } from '@element-plus/icons-vue'
 import { ref, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
-import { startSession } from '../api/frontend'
+import { startSession,getSessionList } from '../api/frontend'
 const iconUrl = new URL('@/assets/robot-fill.png', import.meta.url).href
 const iconUrl1 = new URL('@/assets/like.png', import.meta.url).href
 
+import axios from 'axios'
 
+const request = axios.create({
+  baseURL: '/api',
+  timeout: 30000  // 改为 30 秒
+})
+
+//定义一个当前会话对象
+const currentSession = ref(null)
+const sessionList = ref([])
 //定义对话消息
 const messages = ref([])
 //定义用户输入的消息
@@ -104,18 +145,19 @@ const sendMessage = () => {
 }
 }
 
-const startNewSession = () => {
+const startNewSession = (message) => {
     //构建会话参数
     const sessionParams = {
         initialMessage: message
     }
-    if(currentSession.value.title === '新对话') {
-        sessionParams.sessionTitle = 'AI助手 - ${new Date().toLocaleString()}'
+    if(currentSession.value.sessionTitle === '新对话') {
+        sessionParams.sessionTitle = `AI助手 - ${new Date().toLocaleString()}`
 }else {//如果是历史会话记录
     sessionParams.sessionTitle = currentSession.value.sessionTitle
 }
     //调用后端接口创建新会话
     startSession(sessionParams).then(res=> {
+        console.log(res)
     //将后端返回的数据转为前端会话格式
     const sessionData = {
         sessionId: res.sessionId,
@@ -130,26 +172,45 @@ const startNewSession = () => {
         //否则，创建一个新的会话
         currentSession.value = sessionData
     }
+    //更新会话列表
+    getSessionPage()
 })
 }
 onMounted(() => {
+    //获取会话列表
+    getSessionPage()
     //初始化时创建一个新对话
     createNewFrontendSession()
+    
 })
+//获取会话数据
+const handleSessionClick = (session) => {
+        // 设置当前会话
+    currentSession.value = session
+    // 这里可以添加加载会话消息的逻辑
+    messages.value = []
+}
 
-
-//定义一个当前会话对象
-const currentSession = ref(null)
 
 //新建对话
 const createNewFrontendSession = () => {
     //创建一个新的对话对象
     const newSession = {
-        sessionId:'temp_${Date.now()}', //使用时间戳作为会话ID
+        sessionId:`temp_${Date.now()}`, //使用时间戳作为会话ID
         status: 'TEMP', //会话状态
         sessionTitle: '新对话'
     }
     currentSession.value = newSession
+}
+
+const getSessionPage = () => {
+    getSessionList({
+        pageNum: 1, pageSize: 10
+    }).then(res => {
+        console.log('后端返回数据:', res)
+        sessionList.value = res.records
+
+    })
 }
 
 </script>
