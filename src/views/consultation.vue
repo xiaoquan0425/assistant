@@ -158,6 +158,7 @@ const messages = ref([])
 const userMessage = ref('')
 //定义AI是否正在回复
 const isAITying = ref(false)
+
 //定义处理键盘事件
 const handleKeyDown = (e) => {
     if(e.key === 'Enter' && !e.shiftKey) {
@@ -286,7 +287,36 @@ const startAIResponse = (sessionId,userMessage) => {
     }
     messages.value.push(aiMessage)
     //调用流式接口
+    const ctrl = new AbortController() //用来终止fetchEventSource请求
+    fetchEventSource('/api/psychological-chat/stream',{
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Token':localStorage.getItem('token'),
+            'Accept': 'text/event-stream'
 
+    },
+    body: JSON.stringify({
+        sessionId,
+        userMessage
+    }),
+    signals: ctrl.signal,
+    onopen: (response) => {
+        console.log(response)
+        if(response.headers.get('Content-Type') !== 'text/event-stream'){
+            ElMessage.error('服务器返回非流式数据')
+        }
+    },
+    onmessage: (event) => {
+        const raw = event.data.trim()
+        if(!raw) return
+        const eventName = event.event
+        //获取当前AI消息
+        const aiMessage = messages.value[messages.value.length - 1]
+
+    }
+
+})
 
 }
 </script>
