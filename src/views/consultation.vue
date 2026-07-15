@@ -138,7 +138,7 @@
 
 <script setup>
 import { ChatRound, Clock, DeleteFilled, Promotion } from '@element-plus/icons-vue'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, handleError } from 'vue'
 import { ElMessage } from 'element-plus'
 import { startSession,getSessionList,deleteSession,getSessionDetail} from '@/api/frontend'
 import MarkdownRenderer from '@/components/MarkdownRenderer.vue'
@@ -314,10 +314,32 @@ const startAIResponse = (sessionId,userMessage) => {
         //获取当前AI消息
         const aiMessage = messages.value[messages.value.length - 1]
 
+        if(eventName === 'done'){
+            isAITying.value = false
+            ctrl.abort() //终止请求
+            return
+        }
+        const payload = JSON.parse(raw)
+        const ok = String(payload.code)==='200'
+        if(ok && payload.data && payload.data.content){
+            aiMessage.content += payload.data.content
+        }else if(!ok){
+            //错误恢复的显示
+            handleError(payload.message || 'AI助手出现错误')
+        }
+
     }
 
 })
 
+}
+const handleError = (payload) => {
+    const aiMessage = message.value[messages.value.length - 1]
+    if(aiMessage){
+        aiMessage.content = 'AI回复失败，请重试'
+    }
+    isAITying.value = false
+    ElMessage.error('AI回复失败，请重试')
 }
 </script>
 
