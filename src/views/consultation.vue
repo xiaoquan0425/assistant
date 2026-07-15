@@ -83,10 +83,10 @@
                    </div>
                 </div>
                 <!-- 消息列表 -->
-                 <div v-for="msg in message" :key="msg.id" class="message-item" :class="msg.senderType === 1 ? 'user-messages' : 'ai-message'">
+                 <div v-for="msg in messages" :key="msg.id" class="message-item" :class="msg.senderType === 1 ? 'user-message' : 'ai-message'">
                     <div class="message-avatar">
-                        <el-image v-if="msg.senderType === 1" style="width: 18px;height: 18px;" :src="iconUrl2"></el-image>
-                        <el-image v-if="msg.senderType === 2" style="width: 18px;height: 18px;" :src="iconUrl2"></el-image>
+                        <el-image v-if="msg.senderType === 1" style="width: 18px;height: 18px" :src="iconUrl2"></el-image>
+                        <el-image v-if="msg.senderType === 2" style="width: 18px;height: 18px" :src="iconUrl"></el-image>
                     </div>
                     <div class="message-content">
                         <div class="message-bubble">
@@ -96,6 +96,13 @@
                                 <div class="typing-dot"></div>
                                 <div class="typing-dot"></div>
                             </div>
+                            <!-- AI错误提示 -->
+                             <div v-else-if="msg.isError" class="error-message">
+                                <p>{{ msg.content }}</p>
+                             </div>
+                             <!-- AI正常消息 -->
+                              <MarkdownRenderer v-else-if="msg.senderType === 2 &&!msg.isError" :content="msg.content" :is-ai-message="true"></MarkdownRenderer>
+                              <p v-else-if="msg.content" v-html="formatMessageContent(msg.content)"></p>
                         </div>
                         <div class="message-time">{{ msg.senderType === 2 && isAITying ?'正在输入中...' : msg.createdAt}}</div>
                     </div>
@@ -114,8 +121,12 @@
                     class="message-input"
 
                     ></el-input>
+                    <div class="input-footer">
+                        <span>按Enter发送，Shift+Enter换行</span>
+                        <span>{{ userMessage.length }}/500</span>
+                    </div>
                 </div>
-                <el-button type="primary" class="send-btn" @click="sendMessage">
+                <el-button :disabled="!userMessage.trim() ||userMessage.length > 500 " type="primary" class="send-btn" @click="sendMessage">
                     <el-icon>
                         <Promotion></Promotion>
                     </el-icon>
@@ -134,12 +145,6 @@ const iconUrl = new URL('@/assets/robot-fill.png', import.meta.url).href
 const iconUrl1 = new URL('@/assets/like.png', import.meta.url).href
 const iconUrl2 = new URL('@/assets/users.png', import.meta.url).href
 
-import axios from 'axios'
-
-const request = axios.create({
-  baseURL: '/api',
-  timeout: 30000  // 改为 30 秒
-})
 
 //定义一个当前会话对象
 const currentSession = ref(null)
@@ -154,6 +159,7 @@ const isAITying = ref(false)
 const handleKeyDown = (e) => {
     if(e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault()
+        sendMessage()
     }
 }
 
@@ -201,6 +207,8 @@ const startNewSession = (message) => {
     }
     //更新会话列表
     getSessionPage()
+    //开始流式对话
+    startAIResponse(currentSession.value.sessionId, userMessage)
 })
 }
 onMounted(() => {
@@ -213,10 +221,18 @@ onMounted(() => {
 //获取会话数据
 const handleSessionClick = (session) => {
     console.log(session,'session')
+    //获取数据
     getSessionDetail(session.id).then(res => {
         console.log(res)
         messages.value = res
     })
+    //更新当前会话对象数据
+    const sessionData = {
+        sessionId: "session_" + session.id,
+        status:"ACTIVE",
+        sessionTitle: session.sessionTitle
+    }
+    currentSession.value = sessionData
 }
 
 
@@ -246,6 +262,29 @@ const handleDeleteSession = (sessionId) => {
         ElMessage.success('删除成功')
         getSessionPage()
     })
+}
+
+const formatMessageContent = (content) => {
+    return content.replace(/\n/g, '<br>')
+}
+
+const startAIResponse = (sessionId,userMessage) => {
+    //防止重复发送
+    if(isAITying.value){ElMessage.error('AI助手正在思考中，请稍等')
+        return
+    }
+    isAITying.value = true
+
+    const aiMessage = {
+        id:`ai_${Data.now()}_${Math.random().toString(36).substr(2, 9)}`,//使用时间戳和随机数生成唯一标识
+        senderType: 2,
+        content: '',
+        createAt: new Date().toISOString()
+    }
+    messages.value.push(aiMessage)
+    //调用流式接口
+    
+
 }
 </script>
 
