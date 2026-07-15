@@ -141,6 +141,9 @@ import { ChatRound, Clock, DeleteFilled, Promotion } from '@element-plus/icons-v
 import { ref, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { startSession,getSessionList,deleteSession,getSessionDetail} from '@/api/frontend'
+import MarkdownRenderer from '@/components/MarkdownRenderer.vue'
+import { fetchEventSource } from '@microsoft/fetch-event-source'
+
 const iconUrl = new URL('@/assets/robot-fill.png', import.meta.url).href
 const iconUrl1 = new URL('@/assets/like.png', import.meta.url).href
 const iconUrl2 = new URL('@/assets/users.png', import.meta.url).href
@@ -283,7 +286,7 @@ const startAIResponse = (sessionId,userMessage) => {
     }
     messages.value.push(aiMessage)
     //调用流式接口
-    
+
 
 }
 </script>
