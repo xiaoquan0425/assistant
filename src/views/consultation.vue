@@ -138,7 +138,7 @@
 
 <script setup>
 import { ChatRound, Clock, DeleteFilled, Promotion } from '@element-plus/icons-vue'
-import { ref, onMounted, handleError } from 'vue'
+import { ref, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { startSession,getSessionList,deleteSession,getSessionDetail} from '@/api/frontend'
 import MarkdownRenderer from '@/components/MarkdownRenderer.vue'
@@ -328,12 +328,19 @@ const startAIResponse = (sessionId,userMessage) => {
             handleError(payload.message || 'AI助手出现错误')
         }
 
-    }
+    },
+    onerror: (err) => {
+        handleError(err ||'AI回复失败')
+        throw err
+    },
+    onclose:() => {
+        //开始情绪分析
 
+    }
 })
 
 }
-const handleError = (payload) => {
+const handleError = (message) => {
     const aiMessage = message.value[messages.value.length - 1]
     if(aiMessage){
         aiMessage.content = 'AI回复失败，请重试'
