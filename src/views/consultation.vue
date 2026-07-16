@@ -91,7 +91,7 @@
                     <div class="message-content">
                         <div class="message-bubble">
                             <!-- AI思考中显示 -->
-                            <div v-if="msg.senderType === 2 && isAITying && msg.content" class="typing-indicator">
+                                <div v-if="msg.senderType === 2 && isAITying && !msg.content" class="typing-indicator">
                                 <div class="typing-dot"></div>
                                 <div class="typing-dot"></div>
                                 <div class="typing-dot"></div>
@@ -211,8 +211,14 @@ const startNewSession = (message) => {
     }
     //更新会话列表
     getSessionPage()
+
+    //添加用户消息
+    messages.value.push({
+        id:`user_${Date.now()}`,
+
+    })
     //开始流式对话
-    startAIResponse(currentSession.value.sessionId, userMessage)
+    startAIResponse(currentSession.value.sessionId, message)
 })
 }
 onMounted(() => {
@@ -280,7 +286,7 @@ const startAIResponse = (sessionId,userMessage) => {
     isAITying.value = true
 
     const aiMessage = {
-        id:`ai_${Data.now()}_${Math.random().toString(36).substr(2, 9)}`,//使用时间戳和随机数生成唯一标识
+        id:`ai_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,//使用时间戳和随机数生成唯一标识
         senderType: 2,
         content: '',
         createAt: new Date().toISOString()
@@ -300,7 +306,7 @@ const startAIResponse = (sessionId,userMessage) => {
         sessionId,
         userMessage
     }),
-    signals: ctrl.signal,
+    signal: ctrl.signal,
     onopen: (response) => {
         console.log(response)
         if(response.headers.get('Content-Type') !== 'text/event-stream'){
@@ -340,8 +346,8 @@ const startAIResponse = (sessionId,userMessage) => {
 })
 
 }
-const handleError = (message) => {
-    const aiMessage = message.value[messages.value.length - 1]
+const handleError = () => {
+    const aiMessage = messages.value[messages.value.length - 1]
     if(aiMessage){
         aiMessage.content = 'AI回复失败，请重试'
     }
