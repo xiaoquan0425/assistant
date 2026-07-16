@@ -169,18 +169,30 @@ const handleKeyDown = (e) => {
 
 //用户发送消息
 const sendMessage = () => {
-    if(!userMessage.value.trim()) return
-    if(isAITying.value){
+    if (!userMessage.value.trim()) return
+    if (isAITying.value) {
         ElMessage.error('AI助手正在思考中，请稍等')
         return
     }
-    
+
     const message = userMessage.value.trim()
     userMessage.value = ''
-    //如果没有会话成员或者是临时会话，则创建一个新会话
-    if(currentSession.value.status === 'TEMP') {
+
+    if (currentSession.value?.status === 'TEMP') {
         startNewSession(message)
-}
+    } else if (currentSession.value?.status === 'ACTIVE') {
+        // 历史会话：直接发送消息
+        messages.value.push({
+            id: Date.now(),
+            senderType: 1,
+            content: message,
+            createdAt: new Date().toISOString()
+        })
+        startAIResponse(currentSession.value.sessionId, message)
+    } else {
+        // 理论上不会走到这里，但可做兜底
+        ElMessage.warning('请先创建或选择一个会话')
+    }
 }
 
 const startNewSession = (message) => {
@@ -214,7 +226,10 @@ const startNewSession = (message) => {
 
     //添加用户消息
     messages.value.push({
-        id:`user_${Date.now()}`,
+        id:Date.now(),
+        senderType: 1,
+        content: message,
+        createdAt: new Date().toISOString()
 
     })
     //开始流式对话
@@ -346,14 +361,14 @@ const startAIResponse = (sessionId,userMessage) => {
 })
 
 }
-const handleError = () => {
-    const aiMessage = messages.value[messages.value.length - 1]
-    if(aiMessage){
-        aiMessage.content = 'AI回复失败，请重试'
-    }
-    isAITying.value = false
-    ElMessage.error('AI回复失败，请重试')
-}
+const handleError = (errorMsg = 'AI回复失败，请重试') => {
+  const aiMessage = messages.value[messages.value.length - 1];
+  if (aiMessage) {
+    aiMessage.content = errorMsg;
+  }
+  isAITying.value = false;
+  ElMessage.error(errorMsg);
+};
 </script>
 
 
